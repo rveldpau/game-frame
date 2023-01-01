@@ -11,6 +11,8 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
+app.commandLine.appendSwitch('trace-warnings')
+
 const createWindow = (): void => {
   const {session} = require('electron')
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
@@ -55,8 +57,9 @@ app.on('activate', () => {
   }
 });
 
-app.on("ready", () => {
-  configure().then(createWindow).catch((e) => { throw e; } )
+app.on("ready", async () => {
+  await configure()
+  createWindow();
 })
 
 // In this file you can include the rest of your app's specific main process

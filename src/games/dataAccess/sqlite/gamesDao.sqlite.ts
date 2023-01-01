@@ -1,19 +1,22 @@
-import { Game } from "../game";
-import { GamesDAO } from "./gamesDao";
+import { Game } from "../../game";
+import { GamesDAO } from "../gamesDao";
 import {v4 as uuid} from "uuid";
 import { DataTypes, InferAttributes, InferCreationAttributes, Model, ModelAttributes, Optional, Sequelize } from "sequelize";
+import { SystemDataObject } from "./systemsDao.sqlite";
+import { SystemsDAO } from "../systemsDao";
 
-class GameDataObject extends Model<InferAttributes<GameDataObject>, InferCreationAttributes<GameDataObject>> {
+export class GameDataObject extends Model<InferAttributes<GameDataObject>, InferCreationAttributes<GameDataObject>> {
     declare id: string;
     declare name: string;
     declare path: string;
+    declare systemId: string;
 }
 
 type InferModelAttributes<TYPE extends Model> = ModelAttributes<TYPE, Optional<InferAttributes<TYPE, {
     omit: never;
 }>, never>>
 
-const SequelizeModelTypes:InferModelAttributes<GameDataObject> = {
+export const GameDataObjectSequelizeModelTypes:InferModelAttributes<GameDataObject> = {
     id: {
         type: DataTypes.STRING(32),
         primaryKey: true
@@ -25,6 +28,13 @@ const SequelizeModelTypes:InferModelAttributes<GameDataObject> = {
     path: {
         type: DataTypes.STRING(1024),
         allowNull: false
+    },
+    systemId: {
+        type: DataTypes.STRING(32),
+        references: {
+            model: SystemDataObject,
+            key: "id"
+        }
     }
 }
 
@@ -34,13 +44,7 @@ export class GamesDAOSqlLite extends GamesDAO {
     }
 
     async initialize(): Promise<void> {
-        GameDataObject.init(SequelizeModelTypes,
-            {
-                sequelize: this.sqlize,
-                timestamps: true
-            }
-        );
-        GameDataObject.sync();
+
     }
 
     async list(): Promise<Game[]> {
