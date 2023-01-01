@@ -7,5 +7,6 @@ export abstract class GamesDAO extends DAO {
     }
 
     abstract list():Promise<Game[]>;
+    abstract get(gameId:string):Promise<Game|undefined>;
     abstract create(gameToCreate:Game):Promise<void>;
 }

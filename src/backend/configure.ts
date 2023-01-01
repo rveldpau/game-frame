@@ -6,8 +6,9 @@ import { Sequelize } from "sequelize";
 import { GamesDAOSqlLite } from "../games/dataAccess/sqlite/gamesDao.sqlite";
 import { SystemsDAOSqlLite } from "../games/dataAccess/sqlite/systemsDao.sqlite";
 import { configureSequelize } from "../games/dataAccess/sqlite/setup";
+import { SystemsDAO } from "../games/dataAccess/systemsDao";
 
-export async function configure(){
+export async function configure():Promise<{systemsDAO:SystemsDAO, gamesDAO:GamesDAO}>{
     const sequelize = new Sequelize({
       dialect: "sqlite",
       storage: "./game-frame.db"
@@ -25,4 +26,5 @@ export async function configure(){
     await install(daos);
 
     createBackendAPI({ipcMain, ...daos});
+    return daos;
 }

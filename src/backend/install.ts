@@ -22,6 +22,9 @@ export async function install({
             id: "test",
             name: "Textris",
             path: "/opt/games/dos/TEXTRIS/TEXTRIS.EXE",
+            images: {
+                box: "/home/family/.icons/Textris.png"
+            },
             systemId: "dos"
         })
     }

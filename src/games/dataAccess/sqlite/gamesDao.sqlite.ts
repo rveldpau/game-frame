@@ -10,6 +10,7 @@ export class GameDataObject extends Model<InferAttributes<GameDataObject>, Infer
     declare name: string;
     declare path: string;
     declare systemId: string;
+    declare image_box: string
 }
 
 type InferModelAttributes<TYPE extends Model> = ModelAttributes<TYPE, Optional<InferAttributes<TYPE, {
@@ -29,6 +30,10 @@ export const GameDataObjectSequelizeModelTypes:InferModelAttributes<GameDataObje
         type: DataTypes.STRING(1024),
         allowNull: false
     },
+    image_box: {
+        type: DataTypes.STRING(1024),
+        allowNull: true
+    },
     systemId: {
         type: DataTypes.STRING(32),
         references: {
@@ -39,6 +44,7 @@ export const GameDataObjectSequelizeModelTypes:InferModelAttributes<GameDataObje
 }
 
 export class GamesDAOSqlLite extends GamesDAO {
+
     constructor(private readonly sqlize:Sequelize){
         super();
     }
@@ -49,11 +55,30 @@ export class GamesDAOSqlLite extends GamesDAO {
 
     async list(): Promise<Game[]> {
         const games = await GameDataObject.findAll();
-        return games.map(game => game.dataValues);
+        return games.map(game => ({
+            ...game.dataValues,
+            images: {
+                box: game.image_box
+            }
+        }));
     }
 
     async create(gameToCreate: Game): Promise<void> {
-        await GameDataObject.create(gameToCreate);
+        await GameDataObject.create({
+            ...gameToCreate,
+            image_box: gameToCreate.images?.box
+        });
+    }
+
+    async get(gameId: string): Promise<Game|undefined> {
+        const foundGame = await GameDataObject.findOne({where: {id: gameId}})
+        if(!foundGame){ return; }
+        return {
+            ...foundGame.dataValues,
+            images: {
+                box: foundGame.image_box
+            }
+        }
     }
     
 
