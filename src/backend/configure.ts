@@ -1,18 +1,21 @@
 import { createBackendAPI } from "../ipc/backend";
 import { GamesDAO } from "../games/dataAccess/gamesDao";
 import { ipcMain } from "electron";
-import Realm from "realm";
 import { install } from "./install";
+import { Sequelize } from "sequelize";
+import { GamesDAOSqlLite } from "../games/dataAccess/gamesDao.sqlite";
 
 export async function configure(){
-    const gamesRealm = await Realm.open({
-        schemaVersion: 2,
-        schema: [ { name: GamesDAO.GameRealmName, properties: GamesDAO.GameSchemaProperties } ]
-      })
-      
-      const gamesDAO = new GamesDAO(gamesRealm);
+    const sequelize = new Sequelize({
+      dialect: "sqlite",
+      storage: "./game-frame.db"
+    })
 
-      install({gamesDAO});
+    const gamesDAO = new GamesDAOSqlLite(sequelize);
+    
+    gamesDAO.initialize();
 
-      createBackendAPI({ipcMain, gamesDAO});
+    install({gamesDAO});
+
+    createBackendAPI({ipcMain, gamesDAO});
 }
