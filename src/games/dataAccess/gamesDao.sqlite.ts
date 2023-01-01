@@ -1,6 +1,6 @@
 import { Game } from "../game";
 import { GamesDAO } from "./gamesDao";
-import { Database } from "sqlite3";
+import {v4 as uuid} from "uuid";
 import { DataTypes, InferAttributes, InferCreationAttributes, Model, ModelAttributes, Optional, Sequelize } from "sequelize";
 
 class GameDataObject extends Model<InferAttributes<GameDataObject>, InferCreationAttributes<GameDataObject>> {
@@ -37,16 +37,19 @@ export class GamesDAOSqlLite extends GamesDAO {
         GameDataObject.init(SequelizeModelTypes,
             {
                 sequelize: this.sqlize,
-                tableName: "Games"
+                timestamps: true
             }
-        )
+        );
+        GameDataObject.sync();
     }
 
     async list(): Promise<Game[]> {
-        return [];
+        const games = await GameDataObject.findAll();
+        return games.map(game => game.dataValues);
     }
-    create(gameToCreate: Game): Promise<void> {
-        throw new Error("Method not implemented.");
+
+    async create(gameToCreate: Game): Promise<void> {
+        await GameDataObject.create(gameToCreate);
     }
     
 

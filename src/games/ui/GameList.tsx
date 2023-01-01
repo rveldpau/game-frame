@@ -1,5 +1,5 @@
 import React from "react";
-import { Game } from "../../games/game";
+import { Game } from "../game";
 import { GameTile } from "./GameTIle";
 
 export type GameListProperties = {

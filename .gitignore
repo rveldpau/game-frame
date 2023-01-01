@@ -87,5 +87,6 @@ typings/
 
 # Electron-Forge
 out/
-default.realm*
-default.realm*/
+
+# Don't keep the DB
+game-frame.db

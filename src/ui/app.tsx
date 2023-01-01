@@ -1,10 +1,8 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { IPCAPIHelpers, LaunchGameEvent } from './ipc/api';
-import { GameList } from './ui/games/GameList';
-
-
+import { IPCAPIHelpers, LaunchGameEvent } from '../ipc/api';
+import { GameList } from '../games/ui/GameList';
 
 function render() {
     const container = document.getElementById("app");
