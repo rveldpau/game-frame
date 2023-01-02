@@ -1,0 +1,9 @@
+@use "sass:color";
+
+$menu-width: 10em;
+$menu-width-minimized: 4em;
+$color-main: #17202B;
+$color-neutral: #18181D;
+$color-accent: #2E1A54;
+$color-text: #E8F8FF;
+$color-text-inactive: desaturate(darken($color-text, 70), 70);

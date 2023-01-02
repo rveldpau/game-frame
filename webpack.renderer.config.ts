@@ -8,6 +8,16 @@ rules.push({
   use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
 });
 
+rules.push({
+  test: /\.s[ac]ss$/,
+  use: [{ loader: 'style-loader' }, { loader: 'css-loader' }, {
+    loader: 'sass-loader', 
+    options: {
+      additionalData: '@import "src/ui/variables.scss";'
+    },
+  }],
+});
+
 export const rendererConfig: Configuration = {
   module: {
     rules,
@@ -15,6 +25,6 @@ export const rendererConfig: Configuration = {
   //target: "electron-renderer",
   plugins,
   resolve: {
-    extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
+    extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.sass'],
   },
 };

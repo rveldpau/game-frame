@@ -1,0 +1,56 @@
+.game-list {
+    margin-left: 3rem;
+}
+
+.game-list-games {
+    display: grid;
+    gap: 2em;
+    grid-auto-flow: column;
+    padding-top:1em;
+    height: 12em;
+    width:100%;
+    transition: margin-left 1s linear;
+}
+
+.game-list-scroller{
+    position: relative;
+    margin-left: -3rem;
+    width:calc(100% + 3rem);
+    & .controls{
+        & button {
+            position: absolute;
+            height: 100%;
+            z-index: 200;
+            border: 0;
+            font-weight: bold;
+            color: $color-text-inactive;
+            &:hover{
+                color: $color-text;
+            }
+        }
+        & .left{
+            left:0;
+            padding-right:1em;
+            background: linear-gradient(90deg, $color-neutral 0%, $color-neutral 70%, fade-out($color-neutral, 1) 100%);
+        }
+        & .right{
+            right:0;
+            padding-left:1em;
+            background: linear-gradient(270deg, $color-neutral 0%, $color-neutral 90%, fade-out($color-neutral, 1) 100%);
+            padding-right: 5vw;
+        }
+    }
+}
+
+
+.game-list-scroller-scrollable {
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    grid-auto-columns: 100%;
+    width:100%;
+    position: relative;
+    box-sizing: border-box;
+    padding: 0 3rem;
+    padding-right: calc(5vw + 3rem);
+    scroll-padding-inline: 3rem;
+}

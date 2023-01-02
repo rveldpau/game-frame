@@ -1,0 +1,13 @@
+.container {
+   
+    transition: margin 1s;
+    &.menu-open {
+        margin-left: $menu-width
+    }
+    &.menu-minimized {
+        margin-left: $menu-width-minimized
+    }
+    &.menu-closed {
+        margin-left: 0
+    }
+}

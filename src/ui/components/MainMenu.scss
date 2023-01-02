@@ -1,0 +1,38 @@
+.menu 
+{
+    background-color: $color-main;
+    &.main 
+    {
+        transition: width 1s;
+        display: block;
+        position: absolute;
+        top:0;
+        left:0;
+        height:100vh;
+        width: 0em;
+        overflow: hidden;
+        &.open {
+            width:$menu-width;
+        }
+        &.minimized {
+            width: $menu-width-minimized;
+        }
+
+        & .expander {
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            & button {
+                width:100%;
+                white-space: nowrap;
+                background-color: #0000;
+                border: 0;
+                box-sizing: border-box;
+                padding: 1em;
+                &:hover {
+                    background-color: #0001;
+                }
+            }
+        }
+    }
+}

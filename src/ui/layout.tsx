@@ -1,11 +1,15 @@
+import React from "react";
 import { GameList } from "../games/ui/GameList"
-import { MainMenu } from "./components/MainMenu"
+import { MainMenu, MainMenuProprties } from "./components/MainMenu"
+
+import "./layout.scss";
 
 export function Layout(){
-    return <div className="container main">
-        <MainMenu></MainMenu>
+    const [menuState, setMenuState] = React.useState<MainMenuProprties["state"]>("minimized");
+    return <div className={`container main menu-${menuState}`}>
+        <MainMenu state={menuState} changeMenuState={setMenuState}></MainMenu>
         <div className="container content">
-            <GameList listGames={window.api.games.list} />
+            <GameList title="DOS Games" listGames={window.api.games.list} />
         </div>
     </div>
 }
