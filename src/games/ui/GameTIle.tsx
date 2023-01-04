@@ -20,14 +20,14 @@ export function GameTile({game}: GameTileProperties){
             setLaunching(false);
         })();
     }, [game])
-    return <div className="game-tile">
+    return <a className="game-tile" tabIndex={1} onClick={launch}>
         <div className="game-tile-boxart">
             {game.images?.box && <img className="background" src={`img://${game.id}/box`} />}
             {game.images?.box && <img src={`img://${game.id}/box`} />}
         </div>
         <div className="game-tile-title">
-            <a onClick={launch}>{game.name}{launching && <> - Launching</>}</a>
+            {game.name}{launching && <> - Launching</>}
         </div>
-    </div>
+    </a>
 
 }

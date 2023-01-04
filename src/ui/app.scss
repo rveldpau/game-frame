@@ -3,10 +3,11 @@ body {
     font-size: 1.2em;
     padding: 0em;
     margin: 0em;
-    background-color: $color-neutral;
+    background: linear-gradient(30deg, $color-neutral 0%, $color-main 100%);
     color: $color-text;
 }
 button {
     color: $color-text;
     font-size: 1.2em;
+    outline: none;
 }

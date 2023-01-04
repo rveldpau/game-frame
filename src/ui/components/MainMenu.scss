@@ -1,11 +1,11 @@
 .menu 
 {
-    background-color: $color-main;
+    background-color: $color-accent;
     &.main 
     {
         transition: width 1s;
         display: block;
-        position: absolute;
+        position: fixed;
         top:0;
         left:0;
         height:100vh;

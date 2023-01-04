@@ -10,6 +10,9 @@ export function Layout(){
         <MainMenu state={menuState} changeMenuState={setMenuState}></MainMenu>
         <div className="container content">
             <GameList title="DOS Games" listGames={window.api.games.list} />
+            <GameList title="Arcade Games" listGames={window.api.games.list} />
+            <GameList title="N64 Games" listGames={window.api.games.list} />
+            <GameList title="NES Games" listGames={window.api.games.list} />
         </div>
     </div>
 }
