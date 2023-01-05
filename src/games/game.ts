@@ -1,3 +1,5 @@
+import { SupportedLauncher } from "./launchers/launchers";
+
 export type Game = {
     id: string;
     name: string;
@@ -6,5 +8,6 @@ export type Game = {
         box?: string,
     }
     systemId: string;
+    launcher?: SupportedLauncher
 }
 

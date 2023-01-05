@@ -21,7 +21,6 @@ export function HorizontalScroller({ children }: React.PropsWithChildren<{}>) {
         setScrollPosition(oldPosition => {
             const newPosition = Math.min(Math.max(oldPosition.position + amount, 0), maxScroll);
             const newLogicalPosition = newPosition === 0 ? "beginning" : (newPosition === maxScroll ? "end" : "middle");
-            console.log("New Logical Position", newPosition, newLogicalPosition, maxScroll)
             return {
                 position:newPosition,
                 logicalPosition: newLogicalPosition

@@ -1,7 +1,7 @@
 import { createBackendAPI } from "../ipc/backend";
 import { GamesDAO } from "../games/dataAccess/gamesDao";
 import { ipcMain } from "electron";
-import { install } from "./install";
+import { install } from "./install-temp";
 import { Sequelize } from "sequelize";
 import { GamesDAOSqlLite } from "../games/dataAccess/sqlite/gamesDao.sqlite";
 import { SystemsDAOSqlLite } from "../games/dataAccess/sqlite/systemsDao.sqlite";

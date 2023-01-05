@@ -1,5 +1,6 @@
-import { Game } from "../game";
-
-export abstract class Launcher {
-    abstract launch(game:Game): Promise<void>;
+export type Launcher<LauncherId extends string, LauncherConfig extends {} = {}> = {
+    id: LauncherId;
+    config: LauncherConfig;
 }
+
+export type AnyLauncher = Launcher<string>;
