@@ -1,0 +1,21 @@
+.subscreen {
+    & .header {
+        display:flex;
+        flex-wrap: nowrap;
+    }
+    & .title {
+        flex-grow: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-bottom: 1em;
+    }
+    & .back {
+        position:absolute;
+        left:0.25em;
+        margin-top:0.25em;
+        & .menu-text {
+            display:none;
+        }
+    }
+}

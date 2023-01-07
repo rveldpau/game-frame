@@ -13,5 +13,12 @@
 
     &.content {
         padding: 3em;
+        max-height: 100vh;
+        box-sizing: border-box;
+        margin-right: 0.2em;
     }
+}
+
+.simplebar-scrollbar:before {
+    background-color: $color-text;
 }

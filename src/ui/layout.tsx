@@ -1,18 +1,26 @@
 import React from "react";
+import { Outlet, Route, Routes } from "react-router-dom";
+import SimpleBar from "simplebar-react";
 import { GameList } from "../games/ui/GameList"
 import { MainMenu, MainMenuProprties } from "./components/MainMenu"
+import { Config } from "./config/config";
+import { Home } from "./home";
 
+import 'simplebar-react/dist/simplebar.min.css';
 import "./layout.scss";
 
 export function Layout(){
     const [menuState, setMenuState] = React.useState<MainMenuProprties["state"]>("minimized");
     return <div className={`container main menu-${menuState}`}>
         <MainMenu state={menuState} changeMenuState={setMenuState}></MainMenu>
-        <div className="container content">
-            <GameList title="DOS Games" listGames={window.api.games.list} />
-            <GameList title="Arcade Games" listGames={window.api.games.list} />
-            <GameList title="N64 Games" listGames={window.api.games.list} />
-            <GameList title="NES Games" listGames={window.api.games.list} />
-        </div>
+        <SimpleBar className="container content">
+            <Routes>
+                <Route path="/" element={<Outlet />}>
+                    <Route index element={<Home />} />
+                    <Route path="snes" element={<GameList listGames={window.api.games.list} title="SNES"  />} />
+                    <Route path="config/*" element={<Config />} />
+                </Route>
+            </Routes>
+        </SimpleBar>
     </div>
 }

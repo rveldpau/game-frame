@@ -1,0 +1,27 @@
+li.menu-item{
+    border-radius: calc($menu-width-minimized / 6);
+    list-style: none;
+    &:hover {
+        background-color: rgba(255,255,255,0.15);
+    }
+    white-space: nowrap;
+    & svg {
+        margin: calc($menu-width-minimized / 6) calc($menu-width-minimized / 4.25);
+    }
+    & a {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+    & .menu-text {
+        margin-top: auto;
+        margin-bottom: auto;
+        font-size: 0.8em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        flex-grow: 1;
+        text-align: left;
+        margin-right: calc($menu-width-minimized / 4.25);
+    }
+}
