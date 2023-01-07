@@ -32,7 +32,6 @@
                 flex-grow:1;
             }
         }
-        text-align: center;
         &.minimized {
             width: $menu-width-minimized;
             .menu-text {
@@ -43,6 +42,7 @@
 
         & .menu-item {
             border-radius: 0;
+            width:100%;
         }
 
         & .expander {

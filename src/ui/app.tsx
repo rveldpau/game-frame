@@ -9,6 +9,8 @@ import "./app.scss";
 import { SafeFrame } from './components/SafeFrame';
 import { BrowserRouter, HashRouter } from 'react-router-dom';
 
+import "./styles.scss";
+
 function render() {
     const container = document.getElementById("app");
     const root = createRoot(container); // createRoot(container!) if you use TypeScript

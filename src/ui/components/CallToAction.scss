@@ -1,0 +1,29 @@
+@keyframes wobbly {
+    0% {
+      transform: rotate(-5deg);
+    }
+    50% {
+      transform: rotate(5deg);
+    }
+    100% {
+        transform: rotate(-5deg);
+    }
+  }
+
+.call-to-action {
+    display: flex;
+    align-content: center;
+    flex-direction: column;
+    gap: 2em;
+    & .icon {
+        font-size: 33vh;
+        & svg {
+            animation: wobbly 15s both infinite;
+        }
+        
+    }
+
+    & > div {
+        text-align: center;
+    }
+}
