@@ -6,6 +6,9 @@ import { Launcher } from "./launcher";
 export type DosboxLauncher = Launcher<"dosbox", {}>;
 
 export class DosboxLauncherImpl extends LauncherImpl<DosboxLauncher> {
+    get name(): string {
+        return "Dosbox";
+    }
     get id(): "dosbox" {
         return "dosbox";
     }

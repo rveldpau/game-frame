@@ -1,9 +1,17 @@
 li.menu-item{
-    border-radius: calc($menu-width-minimized / 6);
+    border-radius: $border-radius;
     list-style: none;
     display:inline-block;
+    transition: background-color 500ms;
     &:hover {
-        background-color: rgba(255,255,255,0.15);
+        background-color: $color-highlight;
+    }
+    &.disabled, &.disabled.hoverable:hover{
+        background-color: rgba(0,0,0,0.10);
+        color: $color-text-inactive;
+        & a {
+            cursor: default;
+        }
     }
     white-space: nowrap;
     & svg {
@@ -12,8 +20,10 @@ li.menu-item{
     & a {
         display: flex;
         flex-wrap: nowrap;
+        position: relative;
     }
     & .menu-text {
+        position:relative;
         margin-top: auto;
         margin-bottom: auto;
         font-size: 0.8em;
@@ -23,6 +33,24 @@ li.menu-item{
         display: inline-block;
         flex-grow: 1;
         text-align: left;
-        margin-right: calc($menu-width-minimized / 4.25);
+        padding-right: calc($menu-width-minimized / 4.25);
+        transition: padding-right 500ms;
+    }
+    & .alert-container {
+        opacity: 0;
+        transition: opacity 1s;
+        pointer-events: none;
+    }
+
+    &.alert {
+        & .menu-text{
+            padding-right: calc($menu-width-minimized / 4.25 + 2em);
+        }
+        & .alert-container {
+            position:absolute;
+            pointer-events: all;
+            right: 0em;
+            opacity: 1;
+        }
     }
 }

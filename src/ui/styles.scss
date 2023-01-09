@@ -1,11 +1,20 @@
 .background-main {
     background-color: $color-main;
+    &.hoverable:hover {
+        background-color: lighten($color-main, 10);
+    }
 }
 
 .background-accent {
     background-color: $color-accent;
+    &.hoverable:hover {
+        background-color: lighten($color-accent, 10);
+    }
 }
 
 .background-neutral {
     background-color: $color-neutral;
+    &.hoverable:hover {
+        background-color: lighten($color-neutral, 10);
+    }
 }

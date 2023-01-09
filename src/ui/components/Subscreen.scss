@@ -2,14 +2,18 @@
     & .header {
         display:flex;
         flex-wrap: nowrap;
+        & .title {
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 1em;
+        }
+        & .primary-action{
+            flex-grow: 0;
+        }
     }
-    & .title {
-        flex-grow: 1;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin-bottom: 1em;
-    }
+    
     & .back {
         position:absolute;
         left:0.25em;

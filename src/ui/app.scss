@@ -21,3 +21,17 @@ a {
 h1,h2,h3,h4,h5,h6 {
     margin:0
 }
+
+hr {
+    height: $border-thickness;
+    border: none;
+    background-color: $color-highlight
+}
+
+:active {
+    outline: none;
+}
+
+.actions {
+    text-align: right;
+}

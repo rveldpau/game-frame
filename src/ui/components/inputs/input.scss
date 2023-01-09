@@ -1,0 +1,23 @@
+.field {
+    position: relative;
+    margin-bottom: 1em;
+
+    & label {
+        top:0px;
+        font-weight: bold;
+    }
+
+    input, .select > .gf__control {
+        font-size: 1em;
+        background: none;
+        border: $border-thickness solid $color-accent;
+        border-radius: $border-radius;
+        color: $color-text;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    input {
+        padding: 0.5em;
+    }
+}

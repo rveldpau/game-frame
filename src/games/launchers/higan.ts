@@ -17,6 +17,10 @@ export class HiganLauncherImpl extends LauncherImpl<HiganLauncher> {
     get id(): "higan" {
         return "higan";
     }
+    get name(): string {
+        return "higan";
+    }
+
     async launch(game: Game, config?: Partial<HiganConfig>): Promise<void> {
         const finalConfig = {
             ...defaultConfig,

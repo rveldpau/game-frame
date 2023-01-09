@@ -4,21 +4,13 @@ import { System } from "../../../games/system";
 import React from "react";
 import { CallToAction } from "../../../ui/components/CallToAction";
 import { faGamepad, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { Route, Routes } from "react-router-dom";
+import { SystemsConfigHome } from "./SystemConfigHome";
+import { NewSystem } from "./NewSystem";
 
 export function SystemsConfig() {
-    const [systems, setSystems] = React.useState<System[]>()
-    return <Subscreen title={"Systems"}>
-        { systems && systems.length > 0 ?
-            <SystemList systems={systems} />
-            :
-            <CallToAction
-                message="There are currently no systems configured"
-                icon={faGamepad}
-                action={{
-                    icon:faPlus,
-                    text: "Create System",
-                    onClick: () => alert("New System!")
-                }} />
-        }
-    </Subscreen>
+    return <Routes>
+        <Route index element={<SystemsConfigHome />} />
+        <Route path="new" element={<NewSystem />} />
+    </Routes>
 }

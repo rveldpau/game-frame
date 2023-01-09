@@ -1,3 +1,4 @@
+import { System } from "../games/system";
 import { Game } from "../games/game";
 import { IPCAPI, LaunchGameEvent } from "./api";
 import { Events } from "./events";
@@ -18,6 +19,14 @@ export const createUiAPI: (ipcRenderer: IpcRendererCompatible) => IPCAPI = (ipcR
             async launch(event: LaunchGameEvent): Promise<void> {
                 console.log("Launching " + event.game.path);
                 await ipcRenderer.invoke(Events.games.launch, event);
+            }
+        },
+        systems: {
+            async list(): Promise<System[]> {
+                return await ipcRenderer.invoke(Events.systems.list)
+            },
+            async create(system): Promise<string> {
+                return await ipcRenderer.invoke(Events.systems.create, system);
             }
         }
         

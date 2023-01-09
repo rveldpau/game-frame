@@ -15,11 +15,9 @@ export function Layout(){
         <MainMenu state={menuState} changeMenuState={setMenuState}></MainMenu>
         <SimpleBar className="container content">
             <Routes>
-                <Route path="/" element={<Outlet />}>
-                    <Route index element={<Home />} />
-                    <Route path="snes" element={<GameList listGames={window.api.games.list} title="SNES"  />} />
-                    <Route path="config/*" element={<Config />} />
-                </Route>
+                <Route index element={<Home />} />
+                <Route path="snes" element={<GameList title="SNES"  />} />
+                <Route path="config/*" element={<Config />} />
             </Routes>
         </SimpleBar>
     </div>

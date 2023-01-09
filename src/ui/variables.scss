@@ -5,5 +5,10 @@ $menu-width-minimized: 4em;
 $color-main: #17202B;
 $color-neutral: #18181D;
 $color-accent: #2E1A54;
-$color-text: #E8F8FF;
-$color-text-inactive: desaturate(darken($color-text, 70), 70);
+$color-text: rgba(255,255,255,0.9);
+$color-text-inactive: rgba(255,255,255,0.6);
+
+$color-highlight: rgba(255,255,255,0.15);
+
+$border-radius: calc($menu-width-minimized / 6);
+$border-thickness: 3px;

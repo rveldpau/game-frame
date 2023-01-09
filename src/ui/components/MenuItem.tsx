@@ -5,16 +5,40 @@ import { Color } from "../styles";
 
 import "./MenuItem.scss";
 
+
+export type Action = {
+    text:string, 
+    icon: IconProp, 
+    color?:Color,
+} & (withTarget | withFunction)
+
 type withTarget = {to?: string};
 type withFunction = {onClick?: () => void}
-export type MenuItemProps = {text:string, icon: IconProp, color?:Color } & (withTarget | withFunction);
+export type MenuItemProps = {
+    text:string, 
+    icon: IconProp, 
+    color?:Color,
+    disabled?: boolean,
+    alert?: {
+        icon: IconProp,
+        color?: Color,
+        message: string
+    }
+} & (withTarget | withFunction);
 
 
-export function MenuItem({text, icon, color, ...otherProps}:MenuItemProps){
-    return <li className={["menu-item", color && `background-${color}`].join(" ")}>
-        <Link to={(otherProps as withTarget).to} onClick={(otherProps as withFunction).onClick}>
+export function MenuItem({text, icon, color, disabled, alert, ...otherProps}:MenuItemProps){
+    return <li className={["menu-item", "hoverable", alert && "alert", disabled && "disabled", color && `background-${color}`].join(" ")}>
+        <Link to={!disabled && (otherProps as withTarget).to} onClick={!disabled && (otherProps as withFunction).onClick}>
             <FontAwesomeIcon icon={icon} title={text} />
-            <div className="menu-text">{text}</div>
+            <div className="menu-text">
+                {text}
+            </div>
+                <div className="alert-container">
+                {alert && 
+                    <FontAwesomeIcon icon={alert.icon} title={alert.message} color="#900" />
+                }
+                </div>
         </Link>
     </li>
 }

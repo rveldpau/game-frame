@@ -5,14 +5,14 @@ import { DataTypes, InferAttributes, InferCreationAttributes, Model, ModelAttrib
 import { System } from "../../system";
 import { SystemsDAO } from "../systemsDao";
 import { GameDataObject } from "./gamesDao.sqlite";
-import { Launcher } from "../../../games/launchers/launcher";
+import { AnyLauncher, Launcher } from "../../../games/launchers/launcher";
 import { SupportedLauncher } from "../../../games/launchers/launchers";
 
 export class SystemDataObject extends Model<InferAttributes<SystemDataObject>, InferCreationAttributes<SystemDataObject>> {
     declare id: string;
     declare name: string;
-    declare defaultLauncherId: SupportedLauncher["id"];
-    declare defaultLauncherConfig?: SupportedLauncher["config"];
+    declare defaultLauncherId: AnyLauncher["id"];
+    declare defaultLauncherConfig?: AnyLauncher["config"];
 }
 
 type InferModelAttributes<TYPE extends Model> = ModelAttributes<TYPE, Optional<InferAttributes<TYPE, {

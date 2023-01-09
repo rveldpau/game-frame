@@ -1,0 +1,19 @@
+.select div.gf__menu {
+    background-color: $color-accent;
+}
+
+.select div.gf__option--is-focused {
+    background-color: $color-highlight;
+}
+
+.select .gf__single-value {
+    color:inherit;
+}
+
+.select .gf__indicator-separator {
+    background-color: $color-accent;
+}
+
+.select > .gf__control {
+    padding: 0.1em;
+}
