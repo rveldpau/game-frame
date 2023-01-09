@@ -9,8 +9,12 @@ import { SystemsConfigHome } from "./SystemConfigHome";
 import { NewSystem } from "./NewSystem";
 
 export function SystemsConfig() {
-    return <Routes>
-        <Route index element={<SystemsConfigHome />} />
-        <Route path="new" element={<NewSystem />} />
-    </Routes>
+    return <div style={{display:"flex", justifyContent:"center"}}>
+        <div style={{maxWidth: "800px", width:"100%", position:"relative"}}>
+            <Routes>
+                <Route index element={<SystemsConfigHome />} />
+                <Route path="new" element={<NewSystem />} />
+            </Routes>
+        </div>
+    </div>
 }
