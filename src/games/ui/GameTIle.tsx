@@ -1,6 +1,5 @@
 import React from "react";
 import { Game } from "../../games/game";
-import { IPCAPIHelpers, LaunchGameEvent } from "../../ipc/api";
 import "./GameTile.scss";
 
 export type GameTileProperties = {
@@ -12,11 +11,7 @@ export function GameTile({game}: GameTileProperties){
     const launch = React.useCallback(() => {
         (async () => {
             setLaunching(true);
-            await window.api.games.launch(
-                IPCAPIHelpers.wrapEventDetails<LaunchGameEvent>("launchGame",
-                    { game }
-                )
-            );
+            await window.api.games.launch( { game } );
             setLaunching(false);
         })();
     }, [game])

@@ -1,6 +1,6 @@
 import { System } from "../games/system";
 import { Game } from "../games/game";
-import { IPCAPI, LaunchGameEvent } from "./api";
+import { IPCAPI, IPCAPITemplate, LaunchGameEvent } from "./api";
 import { Events } from "./events";
 
 export type IpcRendererCompatible = {
@@ -11,26 +11,14 @@ export type IpcRendererCompatible = {
 }
 
 export const createUiAPI: (ipcRenderer: IpcRendererCompatible) => IPCAPI = (ipcRenderer) => {
-    return {
-        games: {
-            async list(): Promise<Game[]> {
-                return await ipcRenderer.invoke(Events.games.list);
-            },
-            async launch(event: LaunchGameEvent): Promise<void> {
-                console.log("Launching " + event.game.path);
-                await ipcRenderer.invoke(Events.games.launch, event);
+    return Object.entries(IPCAPITemplate).reduce((api, [group, methods]) => ({
+        ...api,
+        [group]: Object.entries(methods).reduce((groupMethods, [methodKey, method]) => ({
+            ...groupMethods,
+            [methodKey]: async (...args:any[]) => {
+                return await ipcRenderer.invoke(`${group}:${methodKey}`, ...args);
             }
-        },
-        systems: {
-            async list(): Promise<System[]> {
-                return await ipcRenderer.invoke(Events.systems.list)
-            },
-            async create(system): Promise<string> {
-                return await ipcRenderer.invoke(Events.systems.create, system);
-            }
-        }
-        
-    }
-    
+        }), {} as IPCAPI[keyof IPCAPI])
+    }), {} as IPCAPI)
 }
 

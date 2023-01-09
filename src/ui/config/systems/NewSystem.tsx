@@ -7,7 +7,6 @@ import { SystemInput } from "./SystemInput";
 import { Action, MenuItem } from "../../../ui/components/MenuItem";
 import { faExclamationCircle, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { APIContext } from "../../../ui/APIContext";
-import { IPCAPIHelpers, SystemCreateEvent } from "../../../ipc/api";
 import { useNavigate } from "react-router-dom";
 
 export function NewSystem() {
@@ -25,9 +24,9 @@ export function NewSystem() {
     const createSystem = React.useCallback(async () => {
         if(state.valid){
             setSaving(true);
-            await api.systems.create(IPCAPIHelpers.wrapEventDetails<SystemCreateEvent>("systemCreate", {
+            await api.systems.create({
                 system: state.value as System
-            }))
+            })
             setSaving(false);
             navigate("..");
         }
