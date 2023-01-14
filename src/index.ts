@@ -61,9 +61,9 @@ app.on('activate', () => {
 app.on("ready", async () => {
   const daos = await configure();
   protocol.registerFileProtocol('img', async (request, callback) => {
-    const [gameId, artType]:[Game["id"], keyof Game["images"]] = request.url.substring(6).split("/") as [Game["id"], keyof Game["images"]];
+    const [gameId, artType]:[Game["id"], keyof Game["art"]] = request.url.substring(6).split("/") as [Game["id"], keyof Game["art"]];
     const game = await daos.gamesDAO.get(gameId);
-    const artPath = game?.images?.[artType];
+    const artPath = game?.art?.[artType];
     if(!artPath){
       callback({
         statusCode: 404

@@ -1,0 +1,20 @@
+.file-selector{
+    display:flex;
+    cursor: pointer;
+    & .file-path {
+        flex-grow: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        
+        text-overflow: ellipsis;
+        align-self: center;
+        margin-left:1em;
+        margin-right: 1em;
+        display:flex;
+    }
+    & .file-action {
+        flex-grow: 0;
+        display:flex;
+    }
+
+}

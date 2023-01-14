@@ -1,25 +1,32 @@
-import { IPCAPI, IPCAPITemplate, LaunchGameEvent, SystemCreateEvent } from "./api";
-import { IpcMain, ipcRenderer } from "electron";
-import { Events } from "./events";
+import { IPCAPI, IPCAPITemplate } from "./api";
+import { BrowserWindow, dialog, IpcMain } from "electron";
 import { GamesDAO } from "../games/dataAccess/gamesDao";
-import { SupportedLauncher, SupportedLaunchers } from "../games/launchers/launchers";
 import { SystemsDAO } from "../games/dataAccess/systemsDao";
-import { v4 as uuid} from "uuid";
 import { BackendAPI } from "./backendAPI";
+import { GameDetailLookup } from "../games/detailsLookup/GameDetailLookup";
 
-export const createBackendAPI: (dependencies:{
-    ipcMain: IpcMain,
-    gamesDAO: GamesDAO,
-    systemsDAO: SystemsDAO,
-}) => void = ({ipcMain, gamesDAO, systemsDAO}) => {
-    const backendAPI = new BackendAPI(gamesDAO, systemsDAO);
-    return Object.entries(IPCAPITemplate).forEach(([group, methods]) => {
-      console.log("Groups",`${group}`)
-      Object.keys(methods).forEach(method => {
-        console.log("Group Method",`${group}:${method}`)
-        ipcMain.handle(`${group}:${method}`, (_: any, ...args:Parameters<IPCAPI[keyof IPCAPI][keyof IPCAPI[keyof IPCAPI]]>) => 
-          backendAPI[group as keyof IPCAPI][method as keyof IPCAPI[keyof IPCAPI]](...args))
-      })
+export const createBackendAPI: (dependencies: {
+  ipcMain: IpcMain,
+  gamesDAO: GamesDAO,
+  systemsDAO: SystemsDAO,
+  detailLookups: GameDetailLookup[],
+}) => void = ({ ipcMain, gamesDAO, systemsDAO, detailLookups }) => {
+  const backendAPI = new BackendAPI(gamesDAO, systemsDAO, detailLookups);
+  function handleGroupMapping<GROUPKEY extends keyof IPCAPI>([group, methods]: [GROUPKEY, IPCAPI[GROUPKEY]]) {
+    console.log("Groups", `${group}`);
+    (Object.keys(methods) as unknown as (keyof IPCAPI[GROUPKEY])[]).forEach(method => {
+      registerMethodHandler(group, method);
     })
+  }
+
+  function registerMethodHandler<
+    GROUPKEY extends keyof IPCAPI,
+    METHODKEY extends keyof (IPCAPI[GROUPKEY])
+  >(group: GROUPKEY, method: METHODKEY) {
+    console.log("Group Method  -->", `${group}:${method as string}`)
+    ipcMain.handle(`${group}:${method as string}`, (_: any, ...args: any[]) => (backendAPI[group][method] as any)(...args))
+  }
+
+  return Object.entries(IPCAPITemplate).forEach(handleGroupMapping);
 }
 

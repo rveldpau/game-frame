@@ -16,7 +16,6 @@ export function Layout(){
         <SimpleBar className="container content">
             <Routes>
                 <Route index element={<Home />} />
-                <Route path="snes" element={<GameList title="SNES"  />} />
                 <Route path="config/*" element={<Config />} />
             </Routes>
         </SimpleBar>
