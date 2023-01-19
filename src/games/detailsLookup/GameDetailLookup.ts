@@ -1,6 +1,6 @@
 import { Game, GameWithArt } from "../game";
 
-export type GameDetailLookupResult = Pick<GameWithArt, "details"|"art"> & { lookupSource: string };
+export type GameDetailLookupResult = Partial<GameWithArt> & { lookupSource: string };
 export abstract class GameDetailLookup {
     abstract execute(game:Partial<Game>): Promise<GameDetailLookupResult>;
 } 

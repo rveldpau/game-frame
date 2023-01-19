@@ -19,6 +19,7 @@ export class GameDetailLookupNfo extends GameDetailLookup {
             const details = await new XMLParser().parse(fileContents);
             return {
                 lookupSource: "nfo",
+                name: details.game.title,
                 details: {
                     plot: details.game.plot,
                     publisher: details.game.publisher,

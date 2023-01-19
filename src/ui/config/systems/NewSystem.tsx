@@ -24,6 +24,7 @@ export function NewSystem() {
     const createSystem = React.useCallback(async () => {
         if(state.valid){
             setSaving(true);
+            console.log("State:",state);
             await api.systems.create({
                 system: state.value as System
             })

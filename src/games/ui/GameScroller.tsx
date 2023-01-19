@@ -10,7 +10,8 @@ export type GameListProperties = {
     title: string,
     games: Game[]
 }
-export function GameList({title, games}: GameListProperties){
+export function GameScroller({title, games}: GameListProperties){
+    console.log("Rendering", title, games);
     return <div className="game-list">
         <h2>{title}</h2>
         <HorizontalScroller>

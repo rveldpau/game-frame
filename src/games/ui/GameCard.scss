@@ -1,0 +1,25 @@
+.game-card{
+    display:flex;
+    height:5em;
+    width:calc(50% - 0.5em);
+    transition: width 1s;
+    @media only screen and (max-width: 964px) {
+        width: 100%
+    }
+    min-width: 375px;
+    padding: 1em;
+    box-sizing: border-box;
+    border:1px solid $color-accent;
+    border-radius: $border-radius;
+    & .content{
+        flex-grow: 1;
+    }
+    & .image {
+        width: 20%;
+        & img{
+            height:100%;
+            object-fit: contain;
+        }
+    }
+    
+}

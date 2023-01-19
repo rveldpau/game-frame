@@ -2,15 +2,14 @@ import { DAO } from "../../backend/dao";
 import { Game, GameWithArt } from "../game";
 
 export type GameFilters = {
-    system?: string[]
+    systemId?: string[]
 }
 
 export type GetGameOptions<WithArt extends boolean = boolean> = {withArt?: WithArt}
 export type GameArtwork = {
     gameId: Game["id"],
     type: keyof GameWithArt["art"],
-    path: string,
-    isVideo: boolean
+    path: string
 }
 
 export abstract class GamesDAO extends DAO {

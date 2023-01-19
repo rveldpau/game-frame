@@ -1,7 +1,7 @@
 import { Game, GameWithArt } from "../../game";
 import { GameArtwork, GameFilters, GamesDAO, GetGameOptions } from "../gamesDao";
 import { v4 as uuid } from "uuid";
-import { DataTypes, InferAttributes, InferCreationAttributes, Model, ModelAttributes, Optional, Sequelize } from "sequelize";
+import { DataTypes, FindOptions, InferAttributes, InferCreationAttributes, Model, ModelAttributes, Optional, Sequelize } from "sequelize";
 import { SystemDataObject } from "./systemsDao.sqlite";
 import { SystemsDAO } from "../systemsDao";
 
@@ -19,7 +19,6 @@ export class GameDataObject extends Model<InferAttributes<GameDataObject>, Infer
 export class GameArtObject extends Model<InferAttributes<GameArtObject>, InferCreationAttributes<GameArtObject>> {
     declare gameId: string;
     declare type: keyof GameWithArt["art"];
-    declare isVideo: boolean;
     declare path: string;
 }
 
@@ -81,10 +80,6 @@ export const GameArtObjectSequelizeModelTypes: InferModelAttributes<GameArtObjec
     path: {
         type: DataTypes.STRING(1024),
         allowNull: false
-    },
-    isVideo: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false
     }
 }
 
@@ -98,31 +93,33 @@ export class GamesDAOSqlLite extends GamesDAO {
     }
 
     async list(filters?: GameFilters): Promise<Game[]> {
-        const games = await GameDataObject.findAll({
-            where: {
-                systemId: filters?.system
-            },
-            limit: 20
-        });
+        console.log("Getting systems by filter", filters);
+        const findOptions:FindOptions<GameDataObject> = {};
+        if(filters){
+            findOptions.where = filters;
+        }
+        findOptions.limit = 20;
+        
+        console.log("Find options are", findOptions);
+        const games = await GameDataObject.findAll(findOptions);
         return games.map(game => ({
             ...game.dataValues,
             details: this.mapDetails(game)
         }));
     }
 
-    async create(gameToCreate: Game | GameWithArt): Promise<void> {
-        await GameDataObject.create({
-            ...gameToCreate,
+    async create(game: Omit<Game | GameWithArt, "artMetadata">): Promise<void> {
+         await GameDataObject.create({
+            ...game,
         });
 
-        const gameArt = (gameToCreate as GameWithArt).art;
+        const gameArt = (game as GameWithArt).art;
         if(gameArt){
             await Promise.all(Object.entries(gameArt).map(([type, dets]) => 
                 this.setArt({
-                    gameId: gameToCreate.id,
+                    gameId: game.id,
                     type: type as GameArtwork["type"],
-                    isVideo: dets.video,
-                    path: dets.path
+                    path: dets
                 })
             ))
         }
@@ -149,7 +146,7 @@ export class GamesDAOSqlLite extends GamesDAO {
         artWorks.reduce((game, artWork) => ({
             ...game,
             art: {
-                ...game.art,
+                ...game.art ?? {},
                 [artWork.type]: artWork.path
             }
         }), { ...game, art: {}} as GameWithArt)
@@ -161,7 +158,7 @@ export class GamesDAOSqlLite extends GamesDAO {
             where: {
                 gameId, type
             }
-        })).dataValues;
+        }))?.dataValues;
     }
 
     async setArt(artwork: GameArtwork): Promise<void> {

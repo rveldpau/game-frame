@@ -1,0 +1,9 @@
+.two-panel {
+    display:flex;
+    gap: 1em;
+
+    & .panel {
+        flex: 1 1 auto;
+    }
+}
+

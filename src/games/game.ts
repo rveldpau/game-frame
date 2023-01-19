@@ -1,16 +1,12 @@
 import { SupportedLauncher } from "./launchers/launchers";
 
-export type GameArtInfo = {
-    video: boolean,
-    path: string
-};
-
 export type GameWithArt = Game & {
     art?: {
-        box?: GameArtInfo,
-        cart?: GameArtInfo,
-        logo?: GameArtInfo,
-        snapshot?: GameArtInfo
+        box?: string,
+        cart?: string,
+        logo?: string,
+        snapshot?: string,
+        gameplayVideo?: string
     }
 }
 
@@ -30,3 +26,12 @@ export type Game = {
     }
 }
 
+export function validateGame(game:Game):string[]{
+    const messages = []
+
+    if(!game.name) messages.push("A game needs a name");
+    if(!game.path) messages.push("A game needs a path");
+    if(!game.systemId) messages.push("A game needs a system");
+
+    return messages;
+}

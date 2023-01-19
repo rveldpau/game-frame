@@ -14,6 +14,7 @@ export type FileSelectorProps = {
 export function FileSelector({value, onChange}: FileSelectorProps){
     const api = React.useContext(APIContext);
     const selectFile = React.useCallback(() => {
+        console.log("Opening File Selector");
         api.dialogs.selectFileForOpen({
             title: "Select file",
             properties: ["openFile"]
@@ -23,6 +24,6 @@ export function FileSelector({value, onChange}: FileSelectorProps){
     }, [api])
     return <div className="file-selector" onClick={selectFile}>
         <div className="file-path" title={value}>{value?.replace(/\\/g, "/").split("/").pop()}</div>
-        <div className="file-action"><MenuItem onClick={selectFile} text="Browse" icon={faFolderOpen} /></div>
+        <div className="file-action"><MenuItem text="Browse" icon={faFolderOpen} /></div>
     </div>
 }

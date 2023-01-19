@@ -8,12 +8,12 @@ import { Action, MenuItem } from "../../ui/components/MenuItem";
 import { faExclamationCircle, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { APIContext } from "../../ui/APIContext";
 import { useNavigate } from "react-router-dom";
-import { Game } from "../game";
+import { Game, validateGame } from "../game";
 
 export function NewGame() {
     const api = React.useContext(APIContext);
     const navigate = useNavigate();
-    const state = useInputStateManager<Game>({});
+    const state = useInputStateManager<Game>({validate: validateGame});
 
     const action:Action = {
         text: "Create",

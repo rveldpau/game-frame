@@ -5,12 +5,17 @@ import { Field } from "../../ui/components/inputs/Field";
 import { TextInput } from "../../ui/components/inputs/TextInput";
 import { LauncherConfig } from "../../ui/config/launchers/LauncherConfig";
 import { useFieldInputs } from "../../ui/utilities/FieldInputs";
-import { Game } from "../game";
+import { Game, GameWithArt } from "../game";
 import { APIContext } from "../../ui/APIContext";
 import { GameDetailLookupResult } from "../detailsLookup/GameDetailLookup";
+import { GameDetailsInput } from "./GameDetailsInput";
+import { GameArtSelector } from "./GameArtSelector";
+import { Select } from "../../ui/components/inputs/Select";
+import { ContentLoader } from "../../ui/components/ContentLoader";
+import { SystemSelect } from "./SystemSelect";
 export type GameInputProperties = {
-    game?: Partial<Game>,
-    onChange?: ChangeHandler<Partial<Game>>
+    game?: Partial<GameWithArt>,
+    onChange?: ChangeHandler<Partial<GameWithArt>>
 
 }
 export function GameInput({game, onChange}: GameInputProperties){
@@ -19,20 +24,32 @@ export function GameInput({game, onChange}: GameInputProperties){
     const [ foundDetails, setFoundDetails ] = React.useState<GameDetailLookupResult[]>([])
     const onPathChange = React.useCallback((ev: ChangeEvent<string>) => {
         (async () => {
-            setFoundDetails(await api.games.lookupDetails({path: ev.value}));
+            const foundDetails = await api.games.lookupDetails({path: ev.value});
+            setFoundDetails(foundDetails);
+            if(!game.name){
+                handleNameChange({value: foundDetails.find(detail => detail.name)?.name})
+            }
         })();
     }, [api])
 
     const handlePathChange = fieldInputs.useInputHandlerFor("path", { afterChange: onPathChange });
     const handleNameChange = fieldInputs.useInputHandlerFor("name");
+    const handleSystemChange = fieldInputs.useInputHandlerFor("systemId");
+    const handleDetailsChange = fieldInputs.useInputHandlerFor("details");
+    const handleArtChange = fieldInputs.useInputHandlerFor("art");
 
     return <div className="system-editor">
         <Field label="Game File">
             <FileSelector value={game?.path} onChange={handlePathChange} />
-            {JSON.stringify(foundDetails)}
         </Field>
         <Field label="Name">
             <TextInput value={game?.name} onChange={handleNameChange} />
         </Field>
+        <Field label="System">
+            <SystemSelect select="id" onChange={handleSystemChange} value={game?.systemId} />
+        </Field>
+
+        <GameDetailsInput onChange={handleDetailsChange} foundDetails={foundDetails} details={game.details} />
+        <GameArtSelector art={game.art} foundDetails={foundDetails} onChange={handleArtChange} />
     </div>
 }

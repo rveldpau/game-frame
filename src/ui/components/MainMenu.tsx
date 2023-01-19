@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHouse, faGear, faAnglesLeft, faAnglesRight } from '@fortawesome/free-solid-svg-icons'
+import { faHouse, faGear, faAnglesLeft, faAnglesRight, faGamepad } from '@fortawesome/free-solid-svg-icons'
 import { Link } from "react-router-dom";
 import "./MainMenu.scss";
 import { MenuItem } from "./MenuItem";
@@ -13,6 +13,7 @@ export function MainMenu({state, changeMenuState}:MainMenuProprties){
     return <div className={`menu main ${state}`}>
         <Menu>
             <MenuItem to="/" icon={faHouse} text="Home" />
+            <MenuItem to="/games" icon={faGamepad} text="Games" />
             <MenuItem to="/config" icon={faGear} text="Configure" />
         </Menu>
         <div className="expander">

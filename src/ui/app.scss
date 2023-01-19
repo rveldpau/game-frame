@@ -35,3 +35,14 @@ hr {
 .actions {
     text-align: right;
 }
+
+.split-pane {
+    display: flex;
+    align-content: stretch;
+    & .left {
+        flex-grow: 1;
+    }
+    & .right {
+        flex-grow: 1;
+    }
+}

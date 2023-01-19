@@ -1,5 +1,6 @@
 import React from "react";
-import { Game } from "../../games/game";
+import { Game, GameWithArt } from "../../games/game";
+import { GameMedia } from "./GameMedia";
 import "./GameTile.scss";
 
 export type GameTileProperties = {
@@ -17,8 +18,8 @@ export function GameTile({game}: GameTileProperties){
     }, [game])
     return <a className="game-tile" tabIndex={1} onClick={launch}>
         <div className="game-tile-boxart">
-            {game.images?.box && <img className="background" src={`img://${game.id}/box`} />}
-            {game.images?.box && <img src={`img://${game.id}/box`} />}
+            <GameMedia className="background" gameId={game.id} artTypes={["snapshot", "box"]} />
+            <GameMedia gameId={game.id} artTypes={["box","cart"]} />
         </div>
         <div className="game-tile-title">
             {game.name}{launching && <> - Launching</>}

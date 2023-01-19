@@ -1,7 +1,7 @@
 
 import React from "react"
-import { Statement } from "sqlite3"
 import { ChangeHandler, ChangeEvent } from "../components/inputs/ChangeHandler"
+import { merge } from "lodash";
 
 export type InputStateManagerProperties<TYPE extends {}> = {
     value?: TYPE,
@@ -13,10 +13,7 @@ export function useInputStateManager<TYPE extends {}>({ value, validate, onChang
     const [mutatedValue, setMutatedValue] = React.useState<{ value: Partial<TYPE>, dirty: boolean, messages: string[] }>({ value: value ?? {}, dirty: false, messages: [] })
     const handleChange = React.useCallback((ev: ChangeEvent<Partial<TYPE>>) => {
         setMutatedValue(existingState => {
-            const newValue = {
-                ...existingState.value,
-                ...ev.value
-            };
+            const newValue = merge( existingState.value, ev.value );
             const messages = validate ? validate(newValue) : [];
             const newState = {
                 messages, value: newValue, dirty: ev.value !== value
