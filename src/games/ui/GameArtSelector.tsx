@@ -17,6 +17,9 @@ export type GameArtSelectorProperties = {
 }
 
 const artTypes: (keyof GameWithArt["art"])[] = ["box", "cart", "logo", "snapshot", "gameplayVideo"];
+const artTypeTitles = {
+    "box": "Box", "cart":"Cartridge", "logo":"Logo", "snapshot":"Snapshot", "gameplayVideo":"Gameplay Video"
+}
 
 export function GameArtSelector({ art, onChange, foundDetails }: GameArtSelectorProperties) {
     const api = React.useContext(APIContext);
@@ -32,13 +35,15 @@ export function GameArtSelector({ art, onChange, foundDetails }: GameArtSelector
         type,
         value: art?.[type],
         isVideo: type === "gameplayVideo",
-        onChange: fieldInputs.useInputHandlerFor(type), 
+        onChange: fieldInputs.useInputHandlerFor(type, {afterChange: (ev) => {
+            console.log("On Change", ev);
+        }}), 
         options: foundDetails?.map(dets => dets?.art?.[type]).filter(Boolean)
     }));
 
     return <div className="game-art-selector">
-        { items.map( item => <Field label={item.type}>
-            <ArtSelector key={item.type} {...item}  />
+        { items.map( item => <Field label={artTypeTitles[item.type]}>
+            <ArtSelector key={item.type} {...item} dropdownPosition="bottom" />
             </Field>
         )}
     </div>

@@ -1,15 +1,57 @@
+import { faCaretDown, faCaretUp, faCircleXmark, faClose } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { NoArt } from "../NoArt";
 
 import "./ArtSelector.scss";
 import { ChangeHandler } from "./ChangeHandler";
 
-export function ArtSelector({options, value, onChange, isVideo}:{options?:string[], value?: string, onChange: ChangeHandler<string>, isVideo?:boolean}){
+type ArtRenderer = (props: { 
+    path: string,
+    onClick?: (...args:any[]) => any,
+    title?: string
+}) => JSX.Element;
+type ArtSelectorProps = {
+    options?: string[],
+    value?: string,
+    onChange: ChangeHandler<string>,
+    isVideo?: boolean
+    dropdownPosition?: "top" | "bottom"
+}
+const VideoRenderer: ArtRenderer = ({ path, onClick, title }) => {
+    return <video src={`media://${path}`} 
+        muted={true} 
+        autoPlay={false} 
+        onClick={onClick} 
+        title={title}
+        onMouseOver={(ev) => (ev.target as HTMLVideoElement).play() }
+        onMouseOut={(ev) => (ev.target as HTMLVideoElement).pause() }
+     />
+}
+const ImageRenderer: ArtRenderer = ({ path, onClick, title }) => <img src={`media://${path}`} title={title} onClick={onClick} />
 
-    return <div className="art-selctor">{
-        options?.map(option => 
-            <div key={option} onClick={() => onChange({value:option})} style={value === option ? { border: "1px solid green"}:{}}>
-                {isVideo ? <video src={`media://${option}`} controls muted={true} autoPlay={false}  /> : <img src={`media://${option}`}  /> }
-            </div>
-        )
-        }</div>
+export function ArtSelector({ options, value, onChange, isVideo, dropdownPosition }: ArtSelectorProps) {
+    const Renderer: ArtRenderer = isVideo ? VideoRenderer : ImageRenderer;
+    const [isOpen, setIsOpen] = React.useState(false);
+    const openDropdown = React.useCallback(() => { setIsOpen(true)}, [])
+    const handleChangeValue = React.useCallback((newValue?:string) => {
+        setIsOpen(false);
+        console.log("New Value", newValue);
+        onChange({value:newValue});
+    }, [])
+    return <div className={`art-selector open-${dropdownPosition === "top" ? "up" : "down"}`}>
+        <div className={`dropdown-indicator ${options?.length ? "options" : ""}`}><FontAwesomeIcon icon={dropdownPosition === "top" ? faCaretUp : faCaretDown} /></div>
+        <div className="content" onClick={openDropdown}>
+            {value ? <Renderer path={value} title={value} /> : <NoArt title={"No art selected"}/>}    
+        </div>
+        <div className={`options-dropdown ${isOpen?"open":"closed"}`}>
+            <NoArt onClick={() => handleChangeValue(null)} icon={faCircleXmark} title={"No art"}/>
+            {value && <Renderer key={value} path={value} onClick={() => handleChangeValue(value)} title={value} /> }
+            {
+            options.filter(option => option !== value).map(option =>
+                <Renderer key={option} path={option} title={option} onClick={() => handleChangeValue(option)} />
+            )
+        }
+        </div>
+    </div>
 }

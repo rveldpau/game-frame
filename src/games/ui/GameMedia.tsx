@@ -1,6 +1,7 @@
 import { faPhotoFilm } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
+import { NoArt } from "../../ui/components/NoArt"
 import { Game, GameWithArt } from "../game"
 
 export type GameMediaProps = {
@@ -15,7 +16,7 @@ export function GameMedia({artTypes, gameId, className}:GameMediaProps){
     }
 
     if(error){
-        return <FontAwesomeIcon className={className} icon={faPhotoFilm} style={{width:"100%", height:"100%"}} />
+        return <NoArt className={className} />
     }
     else if(artTypes[0] === "gameplayVideo"){
         return <video className={className} src={`artwork://${gameId}/${artTypes.join(";")}`} onError={setError} />
