@@ -32,6 +32,9 @@ export class GameDetailLookupNfo extends GameDetailLookup {
     
         }catch(e){
             console.log("Could not get NFO file", e);
+            return {
+                lookupSource: "nfo"
+            }
         }
     }
     

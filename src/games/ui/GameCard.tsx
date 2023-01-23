@@ -22,7 +22,7 @@ export function GameCard({game, system}: GameCardProperties){
             </div>
         </div>
         <div className="image">
-            <GameMedia gameId={game.id} artTypes={["box","cart","logo","snapshot"]} />
+            <GameMedia gameId={game.id} artTypes={["cart", "box" ,"logo", "snapshot"]} />
         </div>        
         
     </div>

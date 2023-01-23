@@ -19,7 +19,7 @@ export function GameTile({game}: GameTileProperties){
     return <a className="game-tile" tabIndex={1} onClick={launch}>
         <div className="game-tile-boxart">
             <GameMedia className="background" gameId={game.id} artTypes={["snapshot", "box"]} />
-            <GameMedia gameId={game.id} artTypes={["box","cart"]} />
+            <GameMedia className="box" gameId={game.id} artTypes={["cart","box"]} />
         </div>
         <div className="game-tile-title">
             {game.name}{launching && <> - Launching</>}

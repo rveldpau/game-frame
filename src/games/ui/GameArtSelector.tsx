@@ -43,7 +43,7 @@ export function GameArtSelector({ art, onChange, foundDetails }: GameArtSelector
 
     return <div className="game-art-selector">
         { items.map( item => <Field label={artTypeTitles[item.type]}>
-            <ArtSelector key={item.type} {...item} dropdownPosition="bottom" />
+            <ArtSelector key={item.type} {...item} dropdownPosition="top" />
             </Field>
         )}
     </div>

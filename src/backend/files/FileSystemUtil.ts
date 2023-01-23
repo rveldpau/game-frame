@@ -9,7 +9,7 @@ export class FileSystemUtil {
     async exists(path:string): Promise<boolean> {
         return existsSync(path);
     }
-    async listFiles(dir:string, options?: { filter?: RegExp }): Promise<string[]> {
+    async listFiles(dir:string, options?: { filter?: RegExp | RegExp[] }): Promise<string[]> {
         const cacheKey = `listDir:${dir}`;
         console.log("Looking up files in", dir);
         let files = fileCache.get<string[]>(cacheKey);
@@ -19,7 +19,8 @@ export class FileSystemUtil {
         }
 
         if(options?.filter){
-            files = files.filter(file => file.match(options.filter))
+            const filters = Array.isArray(options.filter) ? options.filter : [options.filter];
+            files = files.filter(file => filters.some(filter => file.match(filter)))
         }
         return files;
     }

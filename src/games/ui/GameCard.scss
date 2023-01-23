@@ -13,13 +13,24 @@
     border-radius: $border-radius;
     & .content{
         flex-grow: 1;
-    }
-    & .image {
-        width: 20%;
-        & img{
-            height:100%;
-            object-fit: contain;
+        max-width: 80%;
+        
+        & .name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
+    & .image {
+        display: flex;
+        width: 20%;
+        & img{
+            max-height:100%;
+            max-width:100%;
+            object-fit: contain;
+            margin: auto;
+        }
+    }
+
     
 }

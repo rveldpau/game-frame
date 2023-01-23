@@ -6,6 +6,7 @@ import { System } from "../games/system";
 import { GameScroller } from "../games/ui/GameScroller";
 import { APIContext } from "./APIContext";
 import { NewGame } from "../games/ui/AddGame";
+import { transform } from "lodash";
 
 export function Home(){
     const api = useContext(APIContext);
@@ -28,9 +29,10 @@ export function Home(){
     }, [api, systems]);
     console.log("Systems", systems);
 
-    return <div>
-        {/* <NewGame /> */}
-        {systems.map(system => <GameScroller key={system.id} title={system.name} games={gamesPerSystem[system.id] ?? []} />)}
-        
+    return <div style={{perspective:"300px"}}>
+        <div style={{transform:"rotateY(-2.5deg)", "left": "-5%", "position": "relative"}}>
+            {systems.map(system => <GameScroller key={system.id} title={system.name} games={gamesPerSystem[system.id] ?? []} />)}
+        </div>
+
     </div>
 }

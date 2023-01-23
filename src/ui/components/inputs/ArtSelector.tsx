@@ -1,6 +1,7 @@
-import { faCaretDown, faCaretUp, faCircleXmark, faClose } from "@fortawesome/free-solid-svg-icons";
+import { faCaretDown, faCaretUp, faCircleXmark, faClose, faFileArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { APIContext } from "../../APIContext";
 import { NoArt } from "../NoArt";
 
 import "./ArtSelector.scss";
@@ -32,6 +33,19 @@ const ImageRenderer: ArtRenderer = ({ path, onClick, title }) => <img src={`medi
 
 export function ArtSelector({ options, value, onChange, isVideo, dropdownPosition }: ArtSelectorProps) {
     const Renderer: ArtRenderer = isVideo ? VideoRenderer : ImageRenderer;
+
+    const api = React.useContext(APIContext);
+    const selectFile = React.useCallback(() => {
+        console.log("Opening File Selector");
+        api.dialogs.selectFileForOpen({
+            title: "Select file",
+            properties: ["openFile"]
+        }).then(result => {
+            setIsOpen(false);
+            onChange({value: result[0]});
+        })
+    }, [api])
+
     const [isOpen, setIsOpen] = React.useState(false);
     const openDropdown = React.useCallback(() => { setIsOpen(true)}, [])
     const handleChangeValue = React.useCallback((newValue?:string) => {
@@ -46,6 +60,7 @@ export function ArtSelector({ options, value, onChange, isVideo, dropdownPositio
         </div>
         <div className={`options-dropdown ${isOpen?"open":"closed"}`}>
             <NoArt onClick={() => handleChangeValue(null)} icon={faCircleXmark} title={"No art"}/>
+            <FontAwesomeIcon icon={faFileArrowUp} onClick={selectFile} className="no-art" />
             {value && <Renderer key={value} path={value} onClick={() => handleChangeValue(value)} title={value} /> }
             {
             options.filter(option => option !== value).map(option =>

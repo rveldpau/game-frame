@@ -39,16 +39,15 @@ export function GameInput({game, onChange}: GameInputProperties){
     const handleArtChange = fieldInputs.useInputHandlerFor("art");
 
     return <div className="system-editor">
+        <Field label="System">
+            <SystemSelect select="id" onChange={handleSystemChange} value={game?.systemId} />
+        </Field>
         <Field label="Game File">
             <FileSelector value={game?.path} onChange={handlePathChange} />
         </Field>
         <Field label="Name">
             <TextInput value={game?.name} onChange={handleNameChange} />
         </Field>
-        <Field label="System">
-            <SystemSelect select="id" onChange={handleSystemChange} value={game?.systemId} />
-        </Field>
-
         <GameDetailsInput onChange={handleDetailsChange} foundDetails={foundDetails} details={game.details} />
         <GameArtSelector art={game.art} foundDetails={foundDetails} onChange={handleArtChange} />
     </div>
