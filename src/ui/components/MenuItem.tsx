@@ -1,5 +1,5 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import { Color } from "../styles";
 
@@ -21,6 +21,7 @@ export type MenuItemProps = {
     disabled?: boolean,
     alert?: {
         icon: IconProp,
+        iconAttributes?: Omit<FontAwesomeIconProps, "icon">,
         color?: Color,
         message: string
     }
@@ -36,7 +37,7 @@ export function MenuItem({text, icon, color, disabled, alert, ...otherProps}:Men
             </div>
                 <div className="alert-container">
                 {alert && 
-                    <FontAwesomeIcon icon={alert.icon} title={alert.message} color="#900" />
+                    <FontAwesomeIcon icon={alert.icon} title={alert.message} color="#900" {...alert.iconAttributes??{}} />
                 }
                 </div>
         </Link>

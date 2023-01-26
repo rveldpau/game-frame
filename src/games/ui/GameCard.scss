@@ -9,12 +9,20 @@
     min-width: 375px;
     padding: 1em;
     box-sizing: border-box;
-    border:1px solid $color-accent;
+    border:$border-thickness solid $color-accent;
     border-radius: $border-radius;
+    &.has-click {
+        cursor: pointer;
+        transition: background-color $animation-time;
+        &:hover {
+            background-color: $color-highlight;
+        }
+    }
+
     & .content{
         flex-grow: 1;
         max-width: 80%;
-        
+
         & .name {
             white-space: nowrap;
             overflow: hidden;

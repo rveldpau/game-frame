@@ -14,7 +14,8 @@ export async function configureSequelize(sequelize:Sequelize):Promise<void>{
     GameDataObject.init(GameDataObjectSequelizeModelTypes,
         {
             sequelize: sequelize,
-            timestamps: true
+            timestamps: true,
+            
         }
     );
     GameArtObject.init(GameArtObjectSequelizeModelTypes,
@@ -23,9 +24,23 @@ export async function configureSequelize(sequelize:Sequelize):Promise<void>{
             timestamps: true
         }
     );
-    // Don't connect like this yet; not sure how helpful it will be
-    // GameDataObject.belongsTo(SystemDataObject);
-    // SystemDataObject.hasMany(GameDataObject);
+
+    // GameArtObject.belongsTo(GameDataObject, {
+    //     foreignKey: {
+    //         field: "gameId"
+    //     },
+    //     onDelete: "cascade"
+
+    // });
+    
+    //GameDataObject.hasMany(GameArtObject);
+    // GameDataObject.belongsTo(SystemDataObject, {
+    //     foreignKey: {
+    //         field: "systemId"
+    //     },
+    //     onDelete: "cascade"
+    // });
+    //SystemDataObject.hasMany(GameDataObject);
 
     await sequelize.sync();
 }

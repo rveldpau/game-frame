@@ -22,10 +22,24 @@ export class BackendAPIGames implements GamesAPI{
     list(filters?:GameFilters) {
         return this.gamesDAO.list(filters);
     }
+    async get(gameId:Parameters<GamesAPI["get"]>[0]) {
+        console.log("Getting", gameId);
+        const result = await this.gamesDAO.get(gameId, { withArt: true});
+        console.log("API Result", result);
+        return result;
+    }
+
+    async delete(gameId:Parameters<GamesAPI["delete"]>[0]){
+        await this.gamesDAO.delete(gameId);
+    }
+
     async create({game}:Parameters<GamesAPI["create"]>[0]){
         const id = uuid();
         await this.gamesDAO.create({ ...game, id });
         return id;
+    }
+    async update({game}:Parameters<GamesAPI["update"]>[0]){
+        await this.gamesDAO.update(game);
     }
     async lookupDetails(game:Parameters<GamesAPI["lookupDetails"]>[0]){
         const lookupResults = await Promise.all(this.detailLookups.map(lookup => lookup.execute(game)));

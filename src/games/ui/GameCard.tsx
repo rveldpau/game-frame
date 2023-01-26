@@ -6,10 +6,11 @@ import { GameMedia } from "./GameMedia";
 
 export type GameCardProperties = {
     game: Game,
-    system?: System
+    system?: System,
+    onClick?: (event: {game:Game}) => void
 }
-export function GameCard({game, system}: GameCardProperties){
-    return <div className="game-card">
+export function GameCard({game, system, onClick}: GameCardProperties){
+    return <div className={`game-card ${onClick ? "has-click" : "no-click"}`} onClick={()=>onClick({game})}>
         <div className="content">
             <div className="name">
                 {game.name}

@@ -7,6 +7,7 @@ import { GameScroller } from "../games/ui/GameScroller";
 import { APIContext } from "./APIContext";
 import { NewGame } from "../games/ui/AddGame";
 import { transform } from "lodash";
+import { GameMedia } from "../games/ui/GameMedia";
 
 export function Home(){
     const api = useContext(APIContext);

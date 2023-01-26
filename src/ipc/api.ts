@@ -1,4 +1,4 @@
-import { Game } from "../games/game";
+import { Game, GameWithArt } from "../games/game";
 import {v4 as uuid} from "uuid";
 import { System } from "../games/system";
 import { GameFilters } from "../games/dataAccess/gamesDao";
@@ -10,9 +10,12 @@ export type Events = LaunchGameEvent;
 
 export const IPCAPITemplate = {
     games: {
+        get: (gameId:Game["id"]) => Promise.resolve<GameWithArt|undefined>(undefined),
+        delete: (gameId:Game["id"]) => Promise.resolve(),
         launch: (game:LaunchGameEvent) => Promise.resolve(),
         list: (filters?: GameFilters) => Promise.resolve<Game[]>([]),
         create: (props:{game:Omit<Game, "id">}) => Promise.resolve<string>(""),
+        update: (props:{game:Game}) => Promise.resolve(),
         lookupDetails: (game:Partial<Game>) => Promise.resolve<GameDetailLookupResult[]>([])
     } as const,
     systems: {

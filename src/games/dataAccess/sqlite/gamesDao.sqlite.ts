@@ -125,6 +125,29 @@ export class GamesDAOSqlLite extends GamesDAO {
         }
     }
 
+    async delete(id: Game["id"]): Promise<void>{
+        await GameArtObject.destroy({where:{gameId: id}});
+        await GameDataObject.destroy({where: {id}})
+    }
+
+    async update(game: Game|GameWithArt): Promise<void> {
+        await GameDataObject.update(game, { where: {
+            id: game.id
+        }});
+
+       const gameArt = (game as GameWithArt).art;
+       if(gameArt){
+           await Promise.all(Object.entries(gameArt).map(([type, dets]) => {
+               return this.setArt({
+                   gameId: game.id,
+                   type: type as GameArtwork["type"],
+                   path: dets
+                })
+            }
+           ))
+       }
+   }
+
     async get(gameId: string, options: GetGameOptions): Promise<Game | undefined> {
         const foundGame = await GameDataObject.findOne({ where: { id: gameId } })
         if (!foundGame) { return; }
@@ -142,15 +165,15 @@ export class GamesDAOSqlLite extends GamesDAO {
                 gameId
             }
         });
+        console.log("Found arts", artWorks.map(art => art.dataValues))
 
-        artWorks.reduce((game, artWork) => ({
+        return artWorks.reduce((game, artWork) => ({
             ...game,
             art: {
                 ...game.art ?? {},
                 [artWork.type]: artWork.path
             }
         }), { ...game, art: {}} as GameWithArt)
-        
     }
 
     async getArt(gameId: Game["id"], type: keyof GameWithArt["art"]): Promise<GameArtwork|undefined> {
@@ -161,8 +184,20 @@ export class GamesDAOSqlLite extends GamesDAO {
         }))?.dataValues;
     }
 
-    async setArt(artwork: GameArtwork): Promise<void> {
-        await GameArtObject.upsert(artwork);
+    async setArt({path, gameId, type}: GameArtwork): Promise<void> {
+        if(!path){
+            console.log("Deleting");
+            await GameArtObject.destroy({where: {
+                gameId: gameId,
+                type: type
+            }})
+        }else if(await GameArtObject.findOne({where:{gameId, type}})){
+            console.log("Updating");
+            await GameArtObject.update({path}, { where: {gameId, type}});
+        }else{
+            console.log("Inserting");
+            await GameArtObject.create({path, gameId, type});
+        }
     }
 
     private mapDetails(lookup:GameDataObject):Game["details"] {

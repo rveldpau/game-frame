@@ -7,14 +7,19 @@ import { Subscreen } from "../../ui/components/Subscreen";
 import { Game } from "../game";
 import { GameTile } from "./GameTIle";
 import { GameCard } from "./GameCard";
+import { useNavigate } from "react-router-dom";
 
 import "./GamesCatalog.scss";
 import { System } from "../system";
 
 function GameList({data}: ContentLoaderRendererProps<{games:Game[], systems:System[]},{createAction:Action}>){
     const {games, systems} = data;
+    const navigate = useNavigate();
+    const handleClick = React.useCallback(({game}:{game:Game}) => {
+        navigate(game.id);
+    },[useNavigate])
     return <div className="game-list">
-        {games.map(game => <GameCard key={game.id} game={game} system={systems.find(system => system.id === game.systemId)} />)}
+        {games.map(game => <GameCard key={game.id} game={game} system={systems.find(system => system.id === game.systemId)} onClick={handleClick} />)}
     </div>
 }
 
