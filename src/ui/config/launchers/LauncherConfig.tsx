@@ -6,7 +6,7 @@ import { ChangeHandler } from "../../../ui/components/inputs/ChangeHandler";
 import { useInputStateManager } from "../../../ui/utilities/InputStateManager";
 import { useFieldInputs } from "../../../ui/utilities/FieldInputs";
 import { LauncherConfigSubcomponent } from "./LauncherConfigSubcomponent";
-import { DosboxConfigComponent } from "./specificConfigs/DosboxConfig";
+import { NoConfigComponent } from "./specificConfigs/NoConfig";
 import { HiganConfigComponent } from "./specificConfigs/HiganConfig";
 
 const LauncherOptions: SelectOption<AnyLauncher["id"]>[] = Object.values(SupportedLaunchers)
@@ -21,8 +21,9 @@ export type LauncherConfigProperties = {
 }
 
 const ConfigComponentMapping:Record<SupportedLauncher["id"], LauncherConfigSubcomponent<{}>> = {
-    "dosbox": DosboxConfigComponent,
-    "higan": HiganConfigComponent
+    "dosbox": NoConfigComponent,
+    "higan": HiganConfigComponent,
+    "steam": NoConfigComponent
 }
 
 export function LauncherConfig({launcher, onChange}:LauncherConfigProperties){

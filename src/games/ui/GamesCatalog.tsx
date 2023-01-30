@@ -1,4 +1,4 @@
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faFolderPlus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 import { ContentLoader, ContentLoaderProperties, ContentLoaderRendererProps } from "../../ui/components/ContentLoader";
 import { APIContext } from "../../ui/APIContext";
@@ -30,9 +30,15 @@ export function GamesCatalog(){
         to: "new"
     }
 
+    const importAction:Action = {
+        text: "Import",
+        icon: faFolderPlus,
+        to: "import"
+    }
+
     const api = React.useContext(APIContext);
 
-    return <Subscreen title="Games" backLinkTo="/" primaryAction={createAction}>
+    return <Subscreen title="Games" backLinkTo="/" primaryAction={createAction} secondaryAction={importAction}>
         <ContentLoader load={async () => {
             return { games: await api.games.list(), systems: await api.systems.list() }
         }} render={GameList} createAction={createAction} />

@@ -1,4 +1,5 @@
 import { faFolderOpen } from "@fortawesome/free-solid-svg-icons"
+import { FileFilter } from "electron"
 import React from "react"
 import { APIContext } from "../../../ui/APIContext"
 import { MenuItem } from "../MenuItem"
@@ -8,18 +9,30 @@ import "./FileSelector.scss";
 
 export type FileSelectorProps = {
     value: string,
+    title?: string,
+    filters?: FileFilter[],
+    defaultPath?: string,
     onChange: ChangeHandler<string>
 }
 
-export function FileSelector({value, onChange}: FileSelectorProps){
+let lastPath:string|undefined = undefined;
+
+export function FileSelector({value, onChange, title, filters, defaultPath}: FileSelectorProps){
     const api = React.useContext(APIContext);
     const selectFile = React.useCallback(() => {
-        console.log("Opening File Selector");
         api.dialogs.selectFileForOpen({
-            title: "Select file",
+            title: title ?? "Select file",
+            filters,
+            defaultPath: defaultPath ?? lastPath,
             properties: ["openFile"]
         }).then(result => {
-            onChange({value: result[0]})
+            const file = result[0];
+            if(file.path){
+                console.log("Selected", file)
+                lastPath = file.dir;
+                onChange({value: file.path})
+            }
+            
         })
     }, [api])
     return <div className="file-selector" onClick={selectFile}>

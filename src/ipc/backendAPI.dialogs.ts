@@ -1,17 +1,13 @@
-import { SupportedLaunchers, SupportedLauncher } from "../games/launchers/launchers";
-import { GameFilters, GamesDAO } from "../games/dataAccess/gamesDao";
-import { SystemsDAO } from "../games/dataAccess/systemsDao";
-import { Game } from "../games/game";
-import { DialogsAPI, GamesAPI, IPCAPI, LaunchGameEvent } from "./api";
-import {v4 as uuid} from "uuid";
+import { DialogsAPI, SelectedFile } from "./api";
 import { BrowserWindow, dialog } from "electron";
+import path from "path";
 
 export class BackendAPIDialog implements DialogsAPI{
     constructor(
     ){}
-    async selectFileForOpen(props:Electron.OpenDialogOptions):Promise<string[]> {
+    async selectFileForOpen(props:Electron.OpenDialogOptions):Promise<SelectedFile[]> {
         const window = BrowserWindow.getFocusedWindow() ?? BrowserWindow.getAllWindows()[0];
         const result = await dialog.showOpenDialog(window, props)
-        return result.filePaths;
+        return result.filePaths.map(filePath => ({path: filePath, ...path.parse(filePath)}));
     }
 }

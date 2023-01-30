@@ -4,6 +4,7 @@ import { SystemsDAO } from "../games/dataAccess/systemsDao";
 import { GamesAPI, IPCAPI, LaunchGameEvent } from "./api";
 import {v4 as uuid} from "uuid";
 import { GameDetailLookup } from "../games/detailsLookup/GameDetailLookup";
+import { SupportedImporters } from "../games/importers/importers";
 
 export class BackendAPIGames implements GamesAPI{
     constructor(
@@ -38,6 +39,16 @@ export class BackendAPIGames implements GamesAPI{
         await this.gamesDAO.create({ ...game, id });
         return id;
     }
+
+    import({id, parameters}:Parameters<GamesAPI["import"]>[0]){
+        console.log("Import",arguments);
+        console.log("Import ID",id);
+        console.log("Import Params",parameters);
+        console.log("Supported Importers",Object.keys(SupportedImporters));
+        const importer = SupportedImporters[id];
+        return importer.import(parameters);
+    }
+
     async update({game}:Parameters<GamesAPI["update"]>[0]){
         await this.gamesDAO.update(game);
     }
