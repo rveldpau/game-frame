@@ -1,5 +1,5 @@
 import React from "react";
-import { APIContext } from "../../ui/APIContext";
+import { APIContext, useAPI } from "../../ui/APIContext";
 import { ContentLoader } from "../../ui/components/ContentLoader";
 import { ChangeHandler } from "../../ui/components/inputs/ChangeHandler";
 import { Field } from "../../ui/components/inputs/Field";
@@ -15,7 +15,7 @@ type SystemSelectProps<RESULT_TYPE extends "id"|"system"> = {
 
 
 export function SystemSelect<RESULT_TYPE extends "id"|"system">({value, onChange, select}: SystemSelectProps<RESULT_TYPE>){
-    const api = React.useContext(APIContext);
+    const api = useAPI();
     return <ContentLoader load={() => api.systems.list()} render={results => {
         const options:SelectOption<ResultTypeToType<RESULT_TYPE>>[] =
             results.data.map(system => ({

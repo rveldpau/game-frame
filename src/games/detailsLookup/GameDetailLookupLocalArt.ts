@@ -33,15 +33,17 @@ export class GameDetailLookupLocalArtwork extends GameDetailLookup {
 
         const name = fileName.replace(/\(.*?\)/g, "").trim();
 
-        const knownNames = [name];
+        const possibleNames = [game.name, fileName]
+            .filter(Boolean)
+            .map(name => name.replace(/([\[]().!&])/g, "\\$1").trim() + ".*?\\.nfo");
 
         if(dir !== mainSearchDir){
-            knownNames.push(dir.split(path.sep).pop());
+            possibleNames.push(dir.split(path.sep).pop());
         }
 
-        if(game.name){
-            knownNames.push(game.name);
-        }
+        const knownNames = [game.name, fileName]
+            .filter(Boolean)
+            .map(name => name.replace(/([\[]()-.!&])/g, "\\$1").trim() + ".*?\\.nfo");
 
         console.log("Looking for known names:", knownNames);
     
@@ -50,10 +52,10 @@ export class GameDetailLookupLocalArtwork extends GameDetailLookup {
                 const regexs = knownNames.map(name => `${name.replace(/([(){}\[\].])/g, "\\$1")}\(\\s\\(*[^)]*?\\))*.[a-zA-Z0-9]+$`) ;
                 const searchDir = `${mainSearchDir}/${folder}`;
                 if(!await this.fs.exists(searchDir)){
-                    console.log("searchDir does not exist", searchDir);
+                    //console.log("searchDir does not exist", searchDir);
                     return [];
                 }
-                console.log("searchDir exists", searchDir);
+                //console.log("searchDir exists", searchDir);
                 return (await this.fs.listFiles(searchDir, {filter: regexs.map(regex => new RegExp(regex))}))
                     .map(file => path.join(searchDir, file))
                     .filter( type === "gameplayVideo" ? (file) => videoExtensions.some(ext => file.endsWith(ext)) : (file) => !videoExtensions.some(ext => file.endsWith(ext)))

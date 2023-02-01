@@ -4,14 +4,16 @@ import { GamesDAO } from "../games/dataAccess/gamesDao";
 import { SystemsDAO } from "../games/dataAccess/systemsDao";
 import { BackendAPI } from "./backendAPI";
 import { GameDetailLookup } from "../games/detailsLookup/GameDetailLookup";
+import { ImporterImpl } from "../games/importers/importerImpl";
 
 export const createBackendAPI: (dependencies: {
   ipcMain: IpcMain,
   gamesDAO: GamesDAO,
   systemsDAO: SystemsDAO,
   detailLookups: GameDetailLookup[],
-}) => void = ({ ipcMain, gamesDAO, systemsDAO, detailLookups }) => {
-  const backendAPI = new BackendAPI(gamesDAO, systemsDAO, detailLookups);
+  importers: ImporterImpl[]
+}) => void = ({ ipcMain, gamesDAO, systemsDAO, detailLookups, importers }) => {
+  const backendAPI = new BackendAPI(gamesDAO, systemsDAO, detailLookups, importers);
   function handleGroupMapping<GROUPKEY extends keyof IPCAPI>([group, methods]: [GROUPKEY, IPCAPI[GROUPKEY]]) {
     console.log("Groups", `${group}`);
     (Object.keys(methods) as unknown as (keyof IPCAPI[GROUPKEY])[]).forEach(method => {

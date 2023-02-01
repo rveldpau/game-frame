@@ -7,7 +7,6 @@ import { Subscreen } from "../../../ui/components/Subscreen";
 import { useFieldInputs } from "../../../ui/utilities/FieldInputs";
 import { useInputStateManager } from "../../../ui/utilities/InputStateManager";
 import { AnyImporter, Importer } from "../../importers/importer";
-import { SupportedImporter, SupportedImporters } from "../../importers/importers";
 import { SteamImporter } from "../../importers/steamImporter";
 import { SteamImporterParams } from "./SteamImporterParams";
 import { faFolderPlus } from "@fortawesome/free-solid-svg-icons";
@@ -17,22 +16,27 @@ import React from "react";
 import { IntermediateProgressiveUpdate, ProgressiveUpdate } from "../../../ipc/api";
 import { ImportResult } from "../../importers/importerImpl";
 import { ProgressBar } from "../../../ui/components/ProgressBar";
+import { FileSystemImporterParams } from "./FileSystemImporterParams";
+import { ContentLoader } from "../../../ui/components/ContentLoader";
+import { ImporterSelect } from "./ImportSelect";
 
 export type GamesImportParametersScreen<IMPORTER extends AnyImporter> = (props:{value?: Partial<IMPORTER["parameters"]>, onChange:ChangeHandler<IMPORTER["parameters"]>}) => JSX.Element
 
-const ImporterMap:Record<SupportedImporter["id"], GamesImportParametersScreen<AnyImporter>> = {
-    steam: SteamImporterParams
+const ImporterMap:Record<AnyImporter["id"], GamesImportParametersScreen<AnyImporter>> = {
+    steam: SteamImporterParams,
+    fs: FileSystemImporterParams
 }
 
-type GamesImportState = {id:SupportedImporter["id"], parameters:SupportedImporter["parameters"]};
-const validateState = ({id, parameters}:GamesImportState) => {
+type GamesImportState = {id:AnyImporter["id"], parameters:AnyImporter["parameters"]};
+const validateState = ({id, parameters}:Partial<GamesImportState>) => {
     if(!id){
         return ["You must select an importer"];
     }
-    return SupportedImporters[id].validateParameters(parameters);
+    return [];//SupportedImporters[id].validateParameters(parameters);
 };
+
 export function GamesImport(){
-    const importer = useInputStateManager<SupportedImporter>({ validate: validateState });
+    const importer = useInputStateManager<AnyImporter>({ validate: validateState });
     const fieldChangeHandler = useFieldInputs<Partial<GamesImportState>>({value:importer.value, onChange: importer.handleChange});
 
     const ParamsRenderer = importer.value.id ? ImporterMap[importer.value.id] : undefined;
@@ -44,7 +48,7 @@ export function GamesImport(){
     const api = useAPI();
     const startImport = React.useCallback(async () => {
         console.log("Starting import");
-        let iter = await api.games.import(importer.value as SupportedImporter);
+        let iter = await api.import.import(importer.value as AnyImporter);
         console.log("Iter",iter);
         let result = await iter.next();
         console.log("Result got");
@@ -54,17 +58,13 @@ export function GamesImport(){
             result = await iter.next();
         }
         setResults(result.value);
-        
     },[api])
 
     return <Subscreen title="Games: Import">
         <Field label="Importer">
-            <Select onChange={fieldChangeHandler.useInputHandlerFor("id")} options={Object.entries(SupportedImporters).map(([,importer]) => ({
-                label: importer.name,
-                value: importer.id
-            }))} />
+            <ImporterSelect value={importer.value.id} onChange={fieldChangeHandler.useInputHandlerFor("id")} />
         </Field>
-        {ParamsRenderer && <ParamsRenderer value={importer.value.parameters} onChange={parametersChangeHandler} />}
+        {ParamsRenderer && <ParamsRenderer key={importer.value.id} value={importer.value.parameters} onChange={parametersChangeHandler} />}
         <div className={"actions"}>
                 <MenuItem
                     text = "Start Import"

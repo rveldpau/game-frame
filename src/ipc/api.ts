@@ -4,8 +4,8 @@ import { System } from "../games/system";
 import { GameFilters } from "../games/dataAccess/gamesDao";
 import { GameDetailLookupResult } from "../games/detailsLookup/GameDetailLookup";
 import path from "path";
-import { SupportedImporter } from "../games/importers/importers";
 import { ImportResult } from "../games/importers/importerImpl";
+import { AnyImporter } from "../games/importers/importer";
 
 export type ProgressiveUpdateBase<FINAL extends boolean, TYPE> = {
     progress:number,
@@ -43,10 +43,14 @@ export const IPCAPITemplate = {
         launch: (game:LaunchGameEvent) => Promise.resolve(),
         list: (filters?: GameFilters) => Promise.resolve<Game[]>([]),
         create: (props:{game:Omit<Game, "id">}) => Promise.resolve<string>(""),
-        import: (importer:SupportedImporter) => ProgressiveUpdateTemplate<ImportResult>({gameCount: 0}),
         update: (props:{game:Game}) => Promise.resolve(),
         lookupDetails: (game:Partial<Game>) => Promise.resolve<GameDetailLookupResult[]>([])
     } as const,
+    import: {
+        import: (importer:AnyImporter) => ProgressiveUpdateTemplate<ImportResult>({gameCount: 0}),
+        validate: (importer:AnyImporter) => Promise.resolve<string[]>([]),
+        list: () => Promise.resolve<{id:string, name:string}[]>([])
+    },
     systems: {
         create: (system:SystemCreateEvent) => Promise.resolve<string>(""),
         list: () => Promise.resolve<System[]>([])
@@ -59,4 +63,5 @@ export const IPCAPITemplate = {
 export type IPCAPI = typeof IPCAPITemplate;
 export type SystemsAPI = typeof IPCAPITemplate.systems;
 export type GamesAPI = typeof IPCAPITemplate.games;
+export type ImportAPI = typeof IPCAPITemplate.import;
 export type DialogsAPI = typeof IPCAPITemplate.dialogs;

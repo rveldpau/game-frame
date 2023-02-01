@@ -2,7 +2,8 @@ import { DAO } from "../../backend/dao";
 import { Game, GameWithArt } from "../game";
 
 export type GameFilters = {
-    systemId?: string[]
+    systemId?: string[],
+    path?: string
 }
 
 export type GetGameOptions<WithArt extends boolean = boolean> = {withArt?: WithArt}

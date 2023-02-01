@@ -42,7 +42,7 @@ export function ArtSelector({ options, value, onChange, isVideo, dropdownPositio
             properties: ["openFile"]
         }).then(result => {
             setIsOpen(false);
-            onChange({value: result[0]});
+            onChange({value: result[0].path});
         })
     }, [api])
 

@@ -9,6 +9,8 @@ import { SystemsDAO } from "../games/dataAccess/systemsDao";
 import { GameDetailLookupNfo } from "../games/detailsLookup/GameDetailLookupNfo";
 import { GameDetailLookupLocalArtwork } from "../games/detailsLookup/GameDetailLookupLocalArt";
 import { FileSystemUtil } from "./files/FileSystemUtil";
+import { SteamImporterImpl } from "../games/importers/steamImporter";
+import { FileSystemImporterImpl } from "../games/importers/fsImporter";
 
 export async function configure():Promise<{systemsDAO:SystemsDAO, gamesDAO:GamesDAO}>{
     const sequelize = new Sequelize({
@@ -26,12 +28,17 @@ export async function configure():Promise<{systemsDAO:SystemsDAO, gamesDAO:Games
     }
 
     const detailLookups = [
-      new GameDetailLookupNfo(),
+      new GameDetailLookupNfo(fs),
       new GameDetailLookupLocalArtwork(fs)
+    ]
+
+    const importers = [
+      new SteamImporterImpl(),
+      new FileSystemImporterImpl(fs)
     ]
 
     await Promise.all(Object.values(daos).map(dao => dao.initialize()));
 
-    createBackendAPI({ipcMain, detailLookups,  ...daos});
+    createBackendAPI({ipcMain, detailLookups, importers,  ...daos});
     return daos;
 }

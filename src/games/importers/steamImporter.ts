@@ -36,7 +36,7 @@ export class SteamImporterImpl extends ImporterImpl<SteamImporter>{
         }
     }
 
-    validateParameters(params?: SteamImportParameters): string[] {
+    async validateParameters(params?: SteamImportParameters): Promise<string[]> {
         return params?.vdfFile ? [] : ["A VDF file must be specified"];
     }
 

@@ -3,16 +3,34 @@ import path from "path";
 import { readFile } from "fs/promises";
 import {XMLParser} from "fast-xml-parser";
 import { Game } from "../game";
+import { FileSystemUtil } from "../../backend/files/FileSystemUtil";
 
 export class GameDetailLookupNfo extends GameDetailLookup {
+    constructor(private readonly fsUtils: FileSystemUtil){
+        super();
+    }
     async execute(game:Partial<Game>) {
         if(!game.path){
             return { lookupSource: "nfo" };
         }
-        const {dir, name} = path.parse(game.path)
-        const nfoFile = `${name}.nfo`;
-        const fullPath = path.join(dir,nfoFile);
-        console.log("Finding NFO file", fullPath);
+        const {dir, name:fileName} = path.parse(game.path);
+        const knownNames = [game.name, fileName]
+            .filter(Boolean)
+            .map(name => name.replace(/([\[]()-.!&])/g, "\\$1").trim() + ".*?\\.nfo");
+        console.log("Looking for known name regexes; nfo", knownNames)
+        const files = await this.fsUtils.listFiles(dir, {filter: 
+            knownNames.map(name => new RegExp(name))
+        });
+
+        const file = files[0];
+        if(!file){
+            return {
+                lookupSource: "nfo"
+            }
+        }
+        const fullPath = path.join(dir,file);
+
+        console.log("Using NFO file", fullPath);
     
         try {
             const fileContents = await readFile(fullPath);
