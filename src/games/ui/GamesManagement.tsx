@@ -4,9 +4,11 @@ import { NewGame } from "./AddGame";
 import { EditGameLoader } from "./EditGameLoader";
 import { GamesCatalog } from "./GamesCatalog";
 import { GamesImport } from "./import/GamesImport";
+import SimpleBar from "simplebar-react";
 
 export function GamesManagement():JSX.Element{
-    return <StandardWidth>
+    return <SimpleBar className="container content">
+        <StandardWidth>
         <Routes>
             <Route index element={<GamesCatalog />}/>
             <Route path="new" element={<NewGame />}/>
@@ -14,4 +16,5 @@ export function GamesManagement():JSX.Element{
             <Route path=":gameId" element={<EditGameLoader />}/>
         </Routes>
     </StandardWidth>
+    </SimpleBar>
 }
