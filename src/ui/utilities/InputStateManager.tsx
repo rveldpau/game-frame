@@ -12,7 +12,7 @@ export function useInputStateManager<TYPE extends {}>({ value, validate }: Input
     const [mutatedValue, setMutatedValue] = React.useState<{ value: Partial<TYPE>, dirty: boolean, messages: string[] }>({ value: value ?? {}, dirty: false, messages: [] })
     const handleChange = React.useCallback((ev: ChangeEvent<Partial<TYPE>>) => {
         setMutatedValue(existingState => {
-            const newValue = merge( existingState.value, ev.value );
+            const newValue = merge( {}, existingState.value, ev.value );
             const messages = validate ? validate(newValue) : [];
             const newState = {
                 messages, value: newValue, dirty: ev.value !== value

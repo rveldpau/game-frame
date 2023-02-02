@@ -11,7 +11,11 @@ export type ContentLoaderProperties<TYPE, AdditionalProps extends Record<string,
 
 export function ContentLoader<TYPE, AdditionalProps extends Record<string, unknown> = {}>
     ({ load, queryKey, render:Render, ...additionalProps }: ContentLoaderProperties<TYPE, AdditionalProps>) {
-    const id = React.useMemo(() => queryKey ?? String(Math.random()), [queryKey]);
+    const id = React.useMemo(() => {
+        console.log("New Query Key or Load Function");
+        return queryKey ?? String(Math.random())
+    }, [queryKey, load]);
+    console.log("ID is now", id);
     const { isLoading, error, data } = useQuery(id, load)
         
     if (isLoading) {

@@ -1,7 +1,7 @@
 import { Game, GameWithArt } from "../../game";
 import { GameArtwork, GameFilters, GamesDAO, GetGameOptions } from "../gamesDao";
 import { v4 as uuid } from "uuid";
-import { DataTypes, FindOptions, InferAttributes, InferCreationAttributes, Model, ModelAttributes, Optional, Sequelize } from "sequelize";
+import { DataTypes, FindOptions, InferAttributes, InferCreationAttributes, Model, ModelAttributes, Op, Optional, Sequelize } from "sequelize";
 import { SystemDataObject } from "./systemsDao.sqlite";
 import { SystemsDAO } from "../systemsDao";
 
@@ -97,6 +97,12 @@ export class GamesDAOSqlLite extends GamesDAO {
         const findOptions:FindOptions<GameDataObject> = {};
         if(filters){
             findOptions.where = filters;
+            if(filters?.query){
+                const query = filters.query;
+                findOptions.where["name"] = { [Op.like]: `%${query}%` };
+                delete filters["query"];
+            }
+            
         }
         findOptions.limit = 20;
         

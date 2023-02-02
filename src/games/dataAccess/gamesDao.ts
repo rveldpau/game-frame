@@ -3,7 +3,8 @@ import { Game, GameWithArt } from "../game";
 
 export type GameFilters = {
     systemId?: string[],
-    path?: string
+    path?: string,
+    query?: string
 }
 
 export type GetGameOptions<WithArt extends boolean = boolean> = {withArt?: WithArt}
