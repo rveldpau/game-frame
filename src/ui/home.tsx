@@ -8,6 +8,7 @@ import { APIContext } from "./APIContext";
 import { NewGame } from "../games/ui/AddGame";
 import { transform } from "lodash";
 import { GameMedia } from "../games/ui/GameMedia";
+import SimpleBar from "simplebar-react";
 
 export function Home(){
     const api = useContext(APIContext);
@@ -19,7 +20,7 @@ export function Home(){
     }, [api]);
 
     React.useEffect(() => {
-        systems.forEach(system => {
+        systems.reverse().forEach(system => {
             api.games.list({systemId:[system.id]}).then(games => {
                 setGamesPerSystem(existing => ({
                     ...existing,
@@ -30,9 +31,11 @@ export function Home(){
     }, [api, systems]);
     console.log("Systems", systems);
 
-    return <div style={{perspective:"300px"}}>
-        <div style={{transform:"rotateY(-2.5deg)", "left": "-5%", "position": "relative"}}>
-            {systems.map(system => <GameScroller key={system.id} title={system.name} games={gamesPerSystem[system.id] ?? []} />)}
+    return <div style={{perspective:"300px", height: "100%", overflow:"hidden"}}>
+        <div style={{transform:"rotateY(-4deg)", "left": "-6%", "position": "relative", height: "100%"}}>
+            <SimpleBar className="container content">
+                {systems.map(system => <GameScroller key={system.id} title={system.name} games={gamesPerSystem[system.id] ?? []} />)}
+            </SimpleBar>
         </div>
 
     </div>

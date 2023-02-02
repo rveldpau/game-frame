@@ -14,12 +14,10 @@ export function Layout(){
     const [menuState, setMenuState] = React.useState<MainMenuProprties["state"]>("minimized");
     return <div className={`container main menu-${menuState}`}>
         <MainMenu state={menuState} changeMenuState={setMenuState}></MainMenu>
-        <SimpleBar className="container content">
             <Routes>
                 <Route index element={<Home />} />
                 <Route path="config/*" element={<Config />} />
                 <Route path="games/*" element={<GamesManagement />} />
             </Routes>
-        </SimpleBar>
     </div>
 }
