@@ -47,7 +47,7 @@ export function GamesImport(){
     const [results, setResults] = React.useState<ProgressiveUpdate<ImportResult>>();
     const api = useAPI();
     const startImport = React.useCallback(async () => {
-        console.log("Starting import");
+        console.log("Starting import", importer);
         let iter = await api.import.import(importer.value as AnyImporter);
         console.log("Iter",iter);
         let result = await iter.next();
@@ -58,7 +58,7 @@ export function GamesImport(){
             result = await iter.next();
         }
         setResults(result.value);
-    },[api])
+    },[api, importer.value])
 
     return <Subscreen title="Games: Import">
         <Field label="Importer">

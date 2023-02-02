@@ -27,6 +27,7 @@ export class ImportManager {
     }
 
     import({id, parameters}:AnyImporter){
+        console.log("Selecting importer", id, Object.keys(this.supportedImporters));
         const importer = this.supportedImporters[id];
         return importer.import(parameters, (game) => this.processImportedGame(game));
     }
@@ -41,8 +42,10 @@ export class ImportManager {
             console.log("Game already imported", game.path);
             return;
         }
-        console.log("Handliong", game);
-        const foundDetails = await Promise.all(this.detailLookups.map(lookup => lookup.execute(game)));
+        console.log("Handling", game);
+        const foundDetails = ((await Promise.allSettled(this.detailLookups.map(lookup => lookup.execute(game))))
+            .filter(result => result.status === "fulfilled") as PromiseFulfilledResult<Partial<GameWithArt> & {lookupSource: string;}>[])
+            .map(result => result.status === "fulfilled" && result.value)
         const finalDetails = foundDetails.reduce((finalDetails, details) => merge(finalDetails, details), game);
         finalDetails.id = uuid();
         console.log(`Will add: ${JSON.stringify(finalDetails,undefined, 4)}`)

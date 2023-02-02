@@ -97,7 +97,7 @@ export class GamesDAOSqlLite extends GamesDAO {
         const findOptions:FindOptions<GameDataObject> = {};
         if(filters){
             findOptions.where = filters;
-            if(filters?.query){
+            if(filters?.query !== undefined){
                 const query = filters.query;
                 findOptions.where["name"] = { [Op.like]: `%${query}%` };
                 delete filters["query"];

@@ -90,5 +90,3 @@ out/
 
 # Don't keep the DB
 game-frame.db
-src/backend/install.ts
-src/backend/install-temp.ts
