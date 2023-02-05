@@ -19,16 +19,16 @@ export class GameDetailLookupLocalArtwork extends GameDetailLookup {
     constructor(private readonly fs: FileSystemUtil){
         super();
     }
-    async execute(game: Partial<Game>):Promise<GameDetailLookupResult> {
+    async execute(game: Partial<Game>):Promise<GameDetailLookupResult[]> {
         if(!game.path){
-            return { lookupSource: "local-artwork" };
+            return [];
         }
         const {dir, name:fileName} = path.parse(game.path);
         const mainSearchDir = this.locateSearchDir(dir);
         
         if(!mainSearchDir){
             console.log("No search dir found for", dir);
-            return { lookupSource: "local-artwork" };
+            return [];
         }
 
         const name = fileName.replace(/\(.*?\)/g, "").trim();
@@ -67,13 +67,13 @@ export class GameDetailLookupLocalArtwork extends GameDetailLookup {
             return { [type]: file };
         }));
 
-        return {
+        return [{
             lookupSource: "local-artwork",
             "art": typeMap.reduce((map, entry) => ({
                 ...map,
                 ...entry
             }), {} as GameWithArt["art"])
-        }
+        }];
     }
 
     private locateSearchDir(dir:string):string|undefined{

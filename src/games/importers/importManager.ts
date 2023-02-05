@@ -1,7 +1,7 @@
 import { merge } from "lodash";
 import { GamesDAO } from "../dataAccess/gamesDao";
 import { SystemsDAO } from "../dataAccess/systemsDao";
-import { GameDetailLookup } from "../detailsLookup/GameDetailLookup";
+import { GameDetailLookup, GameDetailLookupResult } from "../detailsLookup/GameDetailLookup";
 import { GameWithArt } from "../game";
 import { AnyImporter } from "./importer";
 import { ImporterImpl } from "./importerImpl";
@@ -44,8 +44,9 @@ export class ImportManager {
         }
         console.log("Handling", game);
         const foundDetails = ((await Promise.allSettled(this.detailLookups.map(lookup => lookup.execute(game))))
-            .filter(result => result.status === "fulfilled") as PromiseFulfilledResult<Partial<GameWithArt> & {lookupSource: string;}>[])
+            .filter(result => result.status === "fulfilled") as PromiseFulfilledResult<GameDetailLookupResult[]>[])
             .map(result => result.status === "fulfilled" && result.value)
+            .flat();
         const finalDetails = foundDetails.reduce((finalDetails, details) => merge(finalDetails, details), game);
         finalDetails.id = uuid();
         console.log(`Will add: ${JSON.stringify(finalDetails,undefined, 4)}`)

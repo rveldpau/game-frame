@@ -44,6 +44,6 @@ export class BackendAPIGames implements GamesAPI{
     }
     async lookupDetails(game:Parameters<GamesAPI["lookupDetails"]>[0]){
         const lookupResults = await Promise.all(this.detailLookups.map(lookup => lookup.execute(game)));
-        return lookupResults;
+        return lookupResults.flat();
     }
 }

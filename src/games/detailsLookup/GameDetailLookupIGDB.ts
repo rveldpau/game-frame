@@ -12,28 +12,25 @@ export class GameDetailLookupIGDB extends GameDetailLookup {
     constructor(private readonly igdbAPI: IGDBApi){
         super();
     }
-    async execute(game: Partial<Game>):Promise<GameDetailLookupResult> {
+    async execute(game: Partial<Game>):Promise<GameDetailLookupResult[]> {
         console.log("GAME", game);
         const {dir, name:fileName} = path.parse(game.path);
-        const gameName = /^([^\[(]+).*?\.[a-zA-Z0-9]+$/.exec(fileName)?.[1]?.replace(/[_]/g," ").trim();
+        const gameName = /^([^\[(]+).*?(\.[a-zA-Z0-9]+)?$/.exec(fileName)?.[1]?.replace(/[_]/g," ").trim();
         const possibleNames = [gameName, game.name, fileName]
             .filter(Boolean)
             .map(name => name.trim());
 
         if(!possibleNames[0]){
-            return {
-                lookupSource: "igdb",
-            }
+            return [];
         }
-        const result = await this.igdbAPI.findGame({where: {name: possibleNames[0]}, project: [ "name", "storyline", "summary" ]})
-        if(result.length > 0){
-            return {
+        const result = await this.igdbAPI.findGame({search: possibleNames[0], fields: [ "name", "storyline", "summary", "first_release_date", "artworks" ]})
+        return result.map(foundGame => ({
                 lookupSource: "igdb",
-                name: result[0].name,
+                name: foundGame.name,
                 details: {
-                    plot: result[0].storyline
+                    plot: foundGame.storyline ?? foundGame.summary,
+                    year: foundGame.first_release_date && new Date(foundGame.first_release_date * 1000).getFullYear()
                 }
-            }
-        }
+        }))
     }
 }

@@ -25,6 +25,7 @@ export function GameInput({game, onChange}: GameInputProperties){
     const onPathChange = React.useCallback((ev: ChangeEvent<string>) => {
         (async () => {
             const foundDetails = await api.games.lookupDetails({path: ev.value});
+            console.log("Found Details", foundDetails);
             setFoundDetails(foundDetails);
             if(!game.name){
                 handleNameChange({value: foundDetails.find(detail => detail.name)?.name})

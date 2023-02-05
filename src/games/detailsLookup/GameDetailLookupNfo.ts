@@ -1,4 +1,4 @@
-import { GameDetailLookup } from "./GameDetailLookup"
+import { GameDetailLookup, GameDetailLookupResult } from "./GameDetailLookup"
 import path from "path";
 import { readFile } from "fs/promises";
 import {XMLParser} from "fast-xml-parser";
@@ -11,7 +11,7 @@ export class GameDetailLookupNfo extends GameDetailLookup {
     }
     async execute(game:Partial<Game>) {
         if(!game.path){
-            return { lookupSource: "nfo" };
+            return [];
         }
         const {dir, name:fileName} = path.parse(game.path);
         const knownNames = [game.name, fileName]
@@ -22,17 +22,14 @@ export class GameDetailLookupNfo extends GameDetailLookup {
             knownNames.map(name => new RegExp(name))
         });
 
-        const file = files[0];
-        if(!file){
-            return {
-                lookupSource: "nfo"
-            }
+        if(files.length === 0){
+            return [];
         }
-        const fullPath = path.join(dir,file);
 
-        console.log("Using NFO file", fullPath);
-    
-        try {
+        const promiseResults = (await Promise.allSettled(files.map(async file => {
+            const fullPath = path.join(dir,file);
+
+            console.log("Using NFO file", fullPath);
             const fileContents = await readFile(fullPath);
             const details = await new XMLParser().parse(fileContents);
             return {
@@ -46,14 +43,11 @@ export class GameDetailLookupNfo extends GameDetailLookup {
                     year: details.game.year,
                     maxPlayer: details.game.maxPlayer,
                 }
-            }
-    
-        }catch(e){
-            console.log("Could not get NFO file", e);
-            return {
-                lookupSource: "nfo"
-            }
-        }
+            };
+        })));
+        const result = promiseResults.filter(result => result.status === "fulfilled").map(result => (result as PromiseFulfilledResult<GameDetailLookupResult>).value );
+        return result;
+        
     }
     
 }
