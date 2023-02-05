@@ -11,6 +11,9 @@ import { GameDetailLookupLocalArtwork } from "../games/detailsLookup/GameDetailL
 import { FileSystemUtil } from "./files/FileSystemUtil";
 import { SteamImporterImpl } from "../games/importers/steamImporter";
 import { FileSystemImporterImpl } from "../games/importers/fsImporter";
+import { GameDetailLookupIGDB } from "../games/detailsLookup/GameDetailLookupIGDB";
+import { IGDBAPIImpl } from "./igdb/IGDBApi";
+import { authorizeIGDB } from "./igdb/IGDBAuth";
 
 export async function configure():Promise<{systemsDAO:SystemsDAO, gamesDAO:GamesDAO}>{
     const sequelize = new Sequelize({
@@ -29,7 +32,8 @@ export async function configure():Promise<{systemsDAO:SystemsDAO, gamesDAO:Games
 
     const detailLookups = [
       new GameDetailLookupNfo(fs),
-      new GameDetailLookupLocalArtwork(fs)
+      new GameDetailLookupLocalArtwork(fs),
+      new GameDetailLookupIGDB(new IGDBAPIImpl(authorizeIGDB))
     ]
 
     const importers = [
