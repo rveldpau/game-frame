@@ -90,3 +90,6 @@ out/
 
 # Don't keep the DB
 game-frame.db
+
+# Test.sql is a file used for easy access to the database
+test.sql

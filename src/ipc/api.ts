@@ -6,6 +6,7 @@ import { GameDetailLookupResult } from "../games/detailsLookup/GameDetailLookup"
 import path from "path";
 import { ImportResult } from "../games/importers/importerImpl";
 import { AnyImporter } from "../games/importers/importer";
+import { GameGenre } from "../games/dataAccess/genresDao";
 
 export type ProgressiveUpdateBase<FINAL extends boolean, TYPE> = {
     progress:number,
@@ -42,6 +43,8 @@ export const IPCAPITemplate = {
         delete: (gameId:Game["id"]) => Promise.resolve(),
         launch: (game:LaunchGameEvent) => Promise.resolve(),
         list: (filters?: GameFilters) => Promise.resolve<Game[]>([]),
+        listGenres: () => Promise.resolve<GameGenre[]>([]),
+        addGenre: (genre:GameGenre) => Promise.resolve(),
         create: (props:{game:Omit<Game, "id">}) => Promise.resolve<string>(""),
         update: (props:{game:Game}) => Promise.resolve(),
         lookupDetails: (game:Partial<Game>) => Promise.resolve<GameDetailLookupResult[]>([])

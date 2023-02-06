@@ -15,6 +15,7 @@ import { BackendAPIImport } from "./backendAPI.import";
 import { ImporterImpl } from "../games/importers/importerImpl";
 import { AnyImporter } from "../games/importers/importer";
 import { ImportManager } from "../games/importers/importManager";
+import { GameGenreDAO } from "../games/dataAccess/genresDao";
 
 export class BackendAPI implements IPCAPI {
     public readonly games: GamesAPI;
@@ -24,11 +25,12 @@ export class BackendAPI implements IPCAPI {
 
     constructor(
         gamesDAO: GamesDAO,
+        genreDAO: GameGenreDAO,
         systemsDAO: SystemsDAO,
         detailLookups: GameDetailLookup[],
         importers: ImporterImpl<AnyImporter>[]
     ){
-        this.games = new BackendAPIGames(gamesDAO, systemsDAO, detailLookups);
+        this.games = new BackendAPIGames(gamesDAO, genreDAO, systemsDAO, detailLookups);
         this.systems = new BackendAPISystems(systemsDAO);
         this.dialogs = new BackendAPIDialog();
         this.import = new BackendAPIImport(new ImportManager(gamesDAO, systemsDAO, detailLookups, importers));

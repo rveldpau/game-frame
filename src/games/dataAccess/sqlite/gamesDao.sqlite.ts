@@ -88,10 +88,6 @@ export class GamesDAOSqlLite extends GamesDAO {
         super();
     }
 
-    async initialize(): Promise<void> {
-
-    }
-
     async list(filters?: GameFilters): Promise<Game[]> {
         console.log("Getting systems by filter", filters);
         const findOptions:FindOptions<GameDataObject> = {};

@@ -4,10 +4,12 @@ import { SystemsDAO } from "../games/dataAccess/systemsDao";
 import { GamesAPI, IPCAPI, LaunchGameEvent } from "./api";
 import {v4 as uuid} from "uuid";
 import { GameDetailLookup } from "../games/detailsLookup/GameDetailLookup";
+import { GameGenre, GameGenreDAO } from "../games/dataAccess/genresDao";
 
 export class BackendAPIGames implements GamesAPI{
     constructor(
         private gamesDAO: GamesDAO,
+        private genreDAO: GameGenreDAO,
         private systemsDAO: SystemsDAO,
         private detailLookups: GameDetailLookup[],
     ){
@@ -21,6 +23,12 @@ export class BackendAPIGames implements GamesAPI{
     }
     list(filters?:GameFilters) {
         return this.gamesDAO.list(filters);
+    }
+    listGenres() {
+        return this.genreDAO.list();
+    }
+    addGenre(genre:GameGenre) {
+        return this.genreDAO.create(genre);
     }
     async get(gameId:Parameters<GamesAPI["get"]>[0]) {
         console.log("Getting", gameId);

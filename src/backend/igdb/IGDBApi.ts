@@ -1,7 +1,9 @@
 import { OAuthAccessToken } from "../oauth/oauth";
 import axios, { AxiosResponse } from "axios";
 
-export type IGDBGameRecord = {
+type HasId = { id:number};
+
+export type IGDBGameRecord = HasId & {
     name: string,
     genres: string,
     external_games: string[],
@@ -12,12 +14,19 @@ export type IGDBGameRecord = {
     videos: string[]
 }
 
-export type ExtractKeys<TYPE extends {}, FIELDS extends (keyof TYPE)[]> = FIELDS extends (infer FieldKeys)[] ? FieldKeys : never;
-export type IGDBApi = {
-    findGame<FIELDS extends (keyof IGDBGameRecord)[]>(options:{ search?: string, where?: Partial<IGDBGameRecord>; fields: FIELDS; }): Promise<PickedFieldsResponse<IGDBGameRecord, FIELDS>[]>;
+export type IGDBGenre = HasId & {
+    name: string,
+    slug: string
 }
 
-type PickedFieldsResponse<TYPE extends {}, FIELDS extends (keyof TYPE)[]> = Pick<TYPE, ExtractKeys<TYPE, FIELDS>>
+export type ExtractKeys<TYPE extends {}, FIELDS extends (keyof TYPE)[]> = FIELDS extends (infer FieldKeys)[] ? FieldKeys : never;
+
+export type IGDBApi = {
+    findGame<FIELDS extends (keyof IGDBGameRecord)[]>(options:{ search?: string, where?: Partial<IGDBGameRecord>; fields: FIELDS; }): Promise<PickedFieldsResponse<IGDBGameRecord, FIELDS>[]>;
+    listGenres<FIELDS extends (keyof IGDBGenre)[]>(options:{ fields: FIELDS; }): Promise<PickedFieldsResponse<IGDBGenre, FIELDS>[]>;
+}
+
+type PickedFieldsResponse<TYPE extends {id:number}, FIELDS extends (keyof TYPE)[]> = Pick<TYPE, ExtractKeys<TYPE, FIELDS> | "id">
 
 export class IGDBAPIImpl implements IGDBApi {
     constructor(private readonly getAccessToken: () => Promise<OAuthAccessToken>){}
@@ -37,17 +46,23 @@ export class IGDBAPIImpl implements IGDBApi {
         return this.makeIGDBAPICall({target: "games", ...options});
     }
 
-    private async makeIGDBAPICall<TYPE, FIELDS extends (keyof TYPE)[]>(
-        {target, fields, where, search}:{target:string, fields: FIELDS, where?: Partial<TYPE>, search?: string}
+    listGenres<FIELDS extends (keyof IGDBGenre)[]>(options: { fields: FIELDS; }): Promise<PickedFieldsResponse<IGDBGenre, FIELDS>[]> {
+        return this.makeIGDBAPICall({target: "genres", limit: 500, ...options});
+    }
+
+
+    private async makeIGDBAPICall<TYPE extends HasId, FIELDS extends (keyof TYPE)[]>(
+        {target, fields, where, search, limit}:{target:string, fields: FIELDS, where?: Partial<TYPE>, search?: string, limit?: number}
     ): Promise<PickedFieldsResponse<TYPE, FIELDS>[]> {
         let currentAccessToken = await this.getCurrentToken();
 
         const fieldsToRetrieve = "fields " + fields.join(",") + ";";
         const searchString = search ? `search "${search.replace(/"/g, '\\"')}";` : ""
+        const limitString = limit !==undefined ? `limit ${limit};` : ""
         const whereString = Object.entries(where ?? {}).length ? "where " + 
             Object.entries(where).reduce((queryStr, [key, value], index) => `${queryStr} ${index === 0 ? "" : "&"} ${key} = ("${value}")` ,"") + ";" : "";
-        const request = `${fieldsToRetrieve}\n;${searchString}\n${whereString}`;
-        console.log(`IGDB API Request ${target}:${request}`);
+        const request = `${fieldsToRetrieve}\n${searchString}\n${whereString}\n${limitString}`.replace(/\n\n/g,"\n").replace(/\n\n/g,"\n").replace(/\n\n/g,"\n");
+        console.log(`IGDB API Request ${target}:\n\t${request.replace(/\n/g,"\n\t")}`);
         const response = await axios.post(`https://api.igdb.com/v4/${target}`, request, { headers: {
             "Authorization": `Bearer ${currentAccessToken}`,
             "Client-ID": process.env["IGDB_CLIENTID"],

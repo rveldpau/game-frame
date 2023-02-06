@@ -11,6 +11,7 @@ import { GameDetailLookupResult } from "../detailsLookup/GameDetailLookup";
 import { NumberInput } from "../../ui/components/inputs/NumberInput";
 import { TwoPanel } from "../../ui/components/TwoPanel";
 import { Select } from "../../ui/components/inputs/Select";
+import { GenreSelect } from "./GenreSelect";
 export type GameDetailsInputProperties = {
     details?: Partial<Game["details"]>,
     onChange?: ChangeHandler<Partial<Game["details"]>>,
@@ -35,17 +36,7 @@ export function GameDetailsInput({ details, onChange, foundDetails }: GameDetail
         <TwoPanel
             left={<>
                 <Field label="Genre">
-                    <Select value={details?.genre || collapsedDetails.details?.genre} options={[
-                        { label: "Action", value: "Action"},
-                        { label: "Action-Adventure", value: "Action-Adventure"},
-                        { label: "Adventure", value: "Adventure"},
-                        { label: "Platform", value: "Platform"},
-                        { label: "Puzzle", value: "Puzzle"},
-                        { label: "RPG", value: "Role-Playing"},
-                        { label: "Simulation", value: "Simulation"},
-                        { label: "Strategy", value: "Strategy"},
-                        { label: "Sports", value: "Sports"},
-                    ]} />
+                    <GenreSelect value={details?.genre} onChange={fieldInputs.useInputHandlerFor("genre")} />
                 </Field>
                 <Field label="Year">
                     <NumberInput value={details?.year || collapsedDetails.details?.year} onChange={handleYearChange} allowDecimal={false} />
