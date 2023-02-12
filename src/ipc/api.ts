@@ -7,6 +7,7 @@ import path from "path";
 import { ImportResult } from "../games/importers/importerImpl";
 import { AnyImporter } from "../games/importers/importer";
 import { GameGenre } from "../games/dataAccess/genresDao";
+import { SystemsDAO } from "../games/dataAccess/systemsDao";
 
 export type ProgressiveUpdateBase<FINAL extends boolean, TYPE> = {
     progress:number,
@@ -56,7 +57,7 @@ export const IPCAPITemplate = {
     },
     systems: {
         create: (system:SystemCreateEvent) => Promise.resolve<string>(""),
-        list: () => Promise.resolve<System[]>([])
+        list: (options?:Parameters<SystemsDAO["list"]>[0]) => Promise.resolve<System[]>([])
     } as const,
     dialogs: {
         selectFileForOpen: (props: Electron.OpenDialogOptions) => Promise.resolve([{path:"", ...path.parse(__dirname)}] as SelectedFile[])

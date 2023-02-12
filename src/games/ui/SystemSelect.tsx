@@ -9,14 +9,15 @@ import { System } from "../system";
 type ResultTypeToType<RESULT_TYPE extends "id"|"system"> = RESULT_TYPE extends "id" ? System["id"] : System;
 type SystemSelectProps<RESULT_TYPE extends "id"|"system"> = {
     select: RESULT_TYPE,
+    showInactive?: boolean,
     onChange: ChangeHandler<ResultTypeToType<RESULT_TYPE> >
     value?: ResultTypeToType<RESULT_TYPE>
 }
 
 
-export function SystemSelect<RESULT_TYPE extends "id"|"system">({value, onChange, select}: SystemSelectProps<RESULT_TYPE>){
+export function SystemSelect<RESULT_TYPE extends "id"|"system">({value, onChange, select, showInactive}: SystemSelectProps<RESULT_TYPE>){
     const api = useAPI();
-    return <ContentLoader load={() => api.systems.list()} render={results => {
+    return <ContentLoader load={() => api.systems.list({active: !showInactive})} render={results => {
         const options:SelectOption<ResultTypeToType<RESULT_TYPE>>[] =
             results.data.map(system => ({
                 label: system.name,

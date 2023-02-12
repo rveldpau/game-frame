@@ -19,7 +19,7 @@ export const InstallDataObjectSequelizeModelTypes: InferModelAttributes<InstallD
     },
     name: {
         type: DataTypes.STRING(255),
-        allowNull: false
+        primaryKey: true
     },
     success: {
         type: DataTypes.BOOLEAN,

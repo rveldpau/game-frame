@@ -11,8 +11,11 @@ import { SupportedLauncher } from "../../../games/launchers/launchers";
 export class SystemDataObject extends Model<InferAttributes<SystemDataObject>, InferCreationAttributes<SystemDataObject>> {
     declare id: string;
     declare name: string;
+    declare summary: string;
+    declare abbreviation: string;
     declare defaultLauncherId: AnyLauncher["id"];
     declare defaultLauncherConfig?: AnyLauncher["config"];
+    declare active: boolean;
 }
 
 type InferModelAttributes<TYPE extends Model> = ModelAttributes<TYPE, Optional<InferAttributes<TYPE, {
@@ -28,12 +31,24 @@ export const SystemSequelizeModelTypes:InferModelAttributes<SystemDataObject> = 
         type: DataTypes.STRING(255),
         allowNull: false
     },
+    summary: {
+        type: DataTypes.STRING(1024),
+        allowNull: true
+    },
+    abbreviation: {
+        type: DataTypes.STRING(16),
+        allowNull: true
+    },
     defaultLauncherId: {
         type: DataTypes.STRING(255),
         allowNull: false
     },
     defaultLauncherConfig: {
         type: DataTypes.JSON
+    },
+    active: {
+        type: DataTypes.BOOLEAN,
+        allowNull:false
     }
 }
 
@@ -45,8 +60,8 @@ export class SystemsDAOSqlLite extends SystemsDAO {
     async initialize(): Promise<void> {
     }
 
-    async list(): Promise<System[]> {
-        const systems = await SystemDataObject.findAll();
+    async list(options:{active?:boolean}): Promise<System[]> {
+        const systems = await SystemDataObject.findAll(options?.active !== undefined ? { where: { active: options.active }}: undefined);
         return systems.map(game => game.dataValues).map(game => ({
             ...game,
             defaultLauncher: {
@@ -67,12 +82,13 @@ export class SystemsDAOSqlLite extends SystemsDAO {
         }
     }
 
-    async create(systemToCreate: System): Promise<void> {
-        await SystemDataObject.create({
+    async create(systemsToCreate: System[]): Promise<void> {
+        const SQLLiteModels = systemsToCreate.map(systemToCreate => ({
             ...systemToCreate,
             defaultLauncherId: systemToCreate.defaultLauncher.id,
             defaultLauncherConfig: systemToCreate.defaultLauncher.config ? JSON.stringify(systemToCreate.defaultLauncher.config) : undefined
-        });
+        }));
+        await SystemDataObject.bulkCreate(SQLLiteModels);
     }
     
 

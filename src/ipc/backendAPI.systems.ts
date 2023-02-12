@@ -11,11 +11,11 @@ export class BackendAPISystems implements SystemsAPI{
     ){}
     async create({system}: SystemCreateEvent) {
         const id = uuid();
-        await this.systemsDAO.create({ ...system, id });
+        await this.systemsDAO.create([{ ...system, id }]);
         return id;
     }
-    list() {
-        return this.systemsDAO.list();
+    list(filters?:{active:boolean}) {
+        return this.systemsDAO.list(filters);
     }
 
 }

@@ -16,7 +16,7 @@ export function Home(){
     const [gamesPerSystem, setGamesPerSystem] = React.useState<Record<System["id"],Game[]>>({});
 
     React.useEffect(() => {
-        api.systems.list().then(setSystems);
+        api.systems.list({active: true}).then(setSystems);
     }, [api]);
 
     React.useEffect(() => {

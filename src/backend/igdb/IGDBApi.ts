@@ -19,11 +19,19 @@ export type IGDBGenre = HasId & {
     slug: string
 }
 
+export type IGDBPlatform = HasId & {
+    name: string,
+    summary: string,
+    abbreviation: string,
+    platform_logo: string
+}
+
 export type ExtractKeys<TYPE extends {}, FIELDS extends (keyof TYPE)[]> = FIELDS extends (infer FieldKeys)[] ? FieldKeys : never;
 
 export type IGDBApi = {
     findGame<FIELDS extends (keyof IGDBGameRecord)[]>(options:{ search?: string, where?: Partial<IGDBGameRecord>; fields: FIELDS; }): Promise<PickedFieldsResponse<IGDBGameRecord, FIELDS>[]>;
     listGenres<FIELDS extends (keyof IGDBGenre)[]>(options:{ fields: FIELDS; }): Promise<PickedFieldsResponse<IGDBGenre, FIELDS>[]>;
+    listPlatforms<FIELDS extends (keyof IGDBPlatform)[]>(options:{ fields: FIELDS; }): Promise<PickedFieldsResponse<IGDBPlatform, FIELDS>[]>;
 }
 
 type PickedFieldsResponse<TYPE extends {id:number}, FIELDS extends (keyof TYPE)[]> = Pick<TYPE, ExtractKeys<TYPE, FIELDS> | "id">
@@ -48,6 +56,10 @@ export class IGDBAPIImpl implements IGDBApi {
 
     listGenres<FIELDS extends (keyof IGDBGenre)[]>(options: { fields: FIELDS; }): Promise<PickedFieldsResponse<IGDBGenre, FIELDS>[]> {
         return this.makeIGDBAPICall({target: "genres", limit: 500, ...options});
+    }
+
+    listPlatforms<FIELDS extends (keyof IGDBPlatform)[]>(options: { fields: FIELDS; }): Promise<PickedFieldsResponse<IGDBPlatform, FIELDS>[]> {
+        return this.makeIGDBAPICall({target: "platforms", limit: 500, ...options});
     }
 
 

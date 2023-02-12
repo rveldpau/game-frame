@@ -4,7 +4,10 @@ import { SupportedLauncher } from "./launchers/launchers";
 export type System = {
     id: string;
     name: string;
+    abbreviation: string;
+    summary: string;
     defaultLauncher: AnyLauncher;
+    active: boolean;
 }
 
 export function validateSystem(system:System):string[]{

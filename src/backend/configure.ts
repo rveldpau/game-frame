@@ -18,6 +18,7 @@ import { GameGenreDAOSqlLite } from "../games/dataAccess/sqlite/genreDao.sqlite"
 import { InstallDAOSqlLite } from "./install/installDao.sqlite";
 import { Installer } from "./install/Installer";
 import { AddGenresFromIGDB } from "./install/v1.0.0/AddGenresFromIGDB";
+import { AddSystemsFromIGDB } from "./install/v1.0.0/AddSystemsFromIGDB";
 
 export async function configure():Promise<{systemsDAO:SystemsDAO, gamesDAO:GamesDAO}>{
     const sequelize = new Sequelize({
@@ -54,12 +55,12 @@ export async function configure():Promise<{systemsDAO:SystemsDAO, gamesDAO:Games
     const api = createBackendAPI({ipcMain, detailLookups, importers,  ...daos});
     
     const installer = new Installer([
-      AddGenresFromIGDB
+      AddGenresFromIGDB, AddSystemsFromIGDB
     ]);
 
     console.log("Starting incremental install");
     await installer.install({
-      api, igdb, installDAO: daos.installDAO
+      api, igdb, daos
     })
     return daos;
 }

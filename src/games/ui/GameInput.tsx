@@ -41,7 +41,7 @@ export function GameInput({game, onChange}: GameInputProperties){
 
     return <div className="system-editor">
         <Field label="System">
-            <SystemSelect select="id" onChange={handleSystemChange} value={game?.systemId} />
+            <SystemSelect select="id" showInactive={true} onChange={handleSystemChange} value={game?.systemId} />
         </Field>
         <Field label="Game File">
             <FileSelector value={game?.path} onChange={handlePathChange} />

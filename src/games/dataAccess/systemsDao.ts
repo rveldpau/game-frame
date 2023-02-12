@@ -6,7 +6,7 @@ export abstract class SystemsDAO extends DAO {
         super();
     }
 
-    abstract list():Promise<System[]>;
+    abstract list(options?:{active?:boolean}):Promise<System[]>;
     abstract get(id:System["id"]):Promise<System>;
-    abstract create(systemToCreate:System):Promise<void>;
+    abstract create(systemToCreate:System[]):Promise<void>;
 }
